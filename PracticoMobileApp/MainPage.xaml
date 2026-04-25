@@ -1,0 +1,31 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PracticoMobileApp.MainPage">
+
+    <VerticalStackLayout Padding="20" Spacing="15">
+        <Label Text="Buscador de Países" FontSize="24" HorizontalOptions="Center" FontAttributes="Bold"/>
+
+        <!-- Campo de búsqueda (Entry) -->
+        <Entry x:Name="SearchBar" 
+               Placeholder="Escribe el nombre del país..." 
+               TextChanged="OnSearchTextChanged" />
+
+        <!-- Grilla de resultados -->
+        <CollectionView x:Name="CountriesCollection">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical" Span="2" />
+                <!-- Span="2" crea 2 columnas -->
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="5" BorderColor="Gray" CornerRadius="10">
+                        <VerticalStackLayout>
+                            <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="16"/>
+                            <Label Text="{Binding Population, StringFormat='Pob: {0:N0}'}" FontSize="12"/>
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentPage>
