@@ -15,6 +15,11 @@ public partial class MainPage : ContentPage
     public MainPage()
     {
         InitializeComponent();
+        System.Diagnostics.Debug.WriteLine("PRUEBA DEBUG");
+        Android.Util.Log.Debug("TEST", "PRUEBA LOGCAT");
+        Console.WriteLine("PRUEBA CONSOLA");
+
+        ObtenerToken();
 
         // 2. Configuramos el cliente para que use el manejador de seguridad (solo en modo desarrollo)
 #if DEBUG
@@ -25,22 +30,76 @@ public partial class MainPage : ContentPage
 #endif
     }
 
+    async void ObtenerToken()
+    {
+        try
+        {
+            await Task.Delay(3000); // 🔥 clave: esperar a Firebase
+
+            var token = await CrossFirebaseCloudMessaging.Current.GetTokenAsync();
+
+            string msg = $"TOKEN: {token ?? "NULL"}";
+
+            System.Diagnostics.Debug.WriteLine(msg);
+            Android.Util.Log.Debug("FCM_TOKEN", msg);
+
+            await DisplayAlert("TOKEN", msg, "OK");
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("ERROR", ex.ToString(), "OK");
+        }
+    }
+
     protected override async void OnAppearing()
     {
         base.OnAppearing();
 
+        // 1. Pedir permiso de notificaciones (VITAL para Android 13+)
+#if ANDROID
+        var status = await Permissions.CheckStatusAsync<Permissions.PostNotifications>();
+        if (status != PermissionStatus.Granted)
+        {
+            status = await Permissions.RequestAsync<Permissions.PostNotifications>();
+        }
+
+        if (status != PermissionStatus.Granted)
+        {
+            await DisplayAlert("Permiso denegado", "No podrás ver las notificaciones push.", "OK");
+        }
+#endif
+
+        // 2. Intentar obtener el token
+        await ObtenerYMostrarToken();
+    }
+
+    private async Task ObtenerYMostrarToken()
+    {
         try
         {
-            await Permissions.RequestAsync<Permissions.PostNotifications>();
+            // Verificamos si Firebase está bien configurado antes de pedir el token
+            await CrossFirebaseCloudMessaging.Current.CheckIfValidAsync();
 
             var token = await CrossFirebaseCloudMessaging.Current.GetTokenAsync();
-            await DisplayAlert("TOKEN", token ?? "NULL", "OK");
 
-            Console.WriteLine($"TOKEN: {token}");
+            if (string.IsNullOrEmpty(token))
+            {
+                await DisplayAlert("Error", "El token está vacío. Revisa el archivo google-services.json", "OK");
+                return;
+            }
+
+            // Mostramos el token en un Alert para poder copiarlo a mano si es necesario
+            await DisplayAlert("FCM TOKEN", token, "Cerrar");
+
+            // Log en la consola de Visual Studio (Ventana de Salida)
+            System.Diagnostics.Debug.WriteLine("========================================");
+            System.Diagnostics.Debug.WriteLine($"MI_TOKEN_FIREBASE: {token}");
+            System.Diagnostics.Debug.WriteLine("========================================");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error obteniendo token: {ex.Message}");
+            // Si entra aquí, suele ser porque el google-services.json no tiene la "Acción de Compilación" correcta
+            await DisplayAlert("Error de Firebase", ex.Message, "OK");
         }
     }
 
