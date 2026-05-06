@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PracticoMobileApp.LoginPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#0F0F0F">
+
+    <Grid>
+        <BoxView Color="#0F0F0F" />
+
+        <VerticalStackLayout VerticalOptions="Center"
+                             HorizontalOptions="Center"
+                             Padding="40"
+                             Spacing="0">
+
+            <!-- Logo -->
+            <Frame WidthRequest="90"
+                   HeightRequest="90"
+                   CornerRadius="22"
+                   BackgroundColor="#1A1A2E"
+                   BorderColor="#4285F4"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,30">
+                <Label Text="🏆"
+                       FontSize="44"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"/>
+            </Frame>
+
+            <Label Text="tupenca.uy"
+                   FontSize="32"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,8"/>
+
+            <!-- Nombre del sitio elegido -->
+            <Label x:Name="SitioLabel"
+                   Text=""
+                   FontSize="14"
+                   TextColor="#4285F4"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,40"/>
+
+            <!-- Botón Google -->
+            <Frame x:Name="GoogleButton"
+                   BackgroundColor="White"
+                   BorderColor="Transparent"
+                   CornerRadius="14"
+                   Padding="0"
+                   HeightRequest="56"
+                   HasShadow="True">
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnGoogleLoginTapped"/>
+                </Frame.GestureRecognizers>
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12" Padding="20,0">
+                    <Label Grid.Column="0"
+                           Text="G"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="#4285F4"
+                           VerticalOptions="Center"/>
+                    <Label Grid.Column="1"
+                           Text="Continuar con Google"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="#333333"
+                           VerticalOptions="Center"/>
+                </Grid>
+            </Frame>
+
+            <ActivityIndicator x:Name="LoadingIndicator"
+                               IsRunning="False"
+                               IsVisible="False"
+                               Color="#4285F4"
+                               Margin="0,20,0,0"/>
+
+            <Label x:Name="ErrorLabel"
+                   Text=""
+                   TextColor="#FF6B6B"
+                   FontSize="13"
+                   HorizontalOptions="Center"
+                   IsVisible="False"
+                   Margin="0,16,0,0"/>
+
+        </VerticalStackLayout>
+
+        <!-- Volver a sitios -->
+        <Label Text="← Cambiar sitio"
+               FontSize="13"
+               TextColor="#555555"
+               HorizontalOptions="Center"
+               VerticalOptions="End"
+               Margin="0,0,0,30">
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnVolverTapped"/>
+            </Label.GestureRecognizers>
+        </Label>
+    </Grid>
+
+</ContentPage>

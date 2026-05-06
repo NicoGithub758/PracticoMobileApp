@@ -16,7 +16,9 @@ namespace PracticoMobileApp.Platforms.Android
         {
             base.OnNewToken(token);
             Log.Debug(TAG, "Token recibido: " + token);
-            // Aquí puedes guardar el token en tu servidor o BD
+
+            // Guardar el token para usarlo al hacer login
+            Preferences.Set("fcm_token", token);
         }
 
         public override void OnMessageReceived(RemoteMessage message)
@@ -28,16 +30,12 @@ namespace PracticoMobileApp.Platforms.Android
             {
                 string title = message.GetNotification().Title ?? "Notificación";
                 string body = message.GetNotification().Body ?? "";
-
                 Log.Debug(TAG, $"Título: {title}, Body: {body}");
                 SendNotificationToAndroid(title, body);
             }
 
-            // También procesa datos del mensaje si existen
             if (message?.Data != null && message.Data.Count > 0)
-            {
                 Log.Debug(TAG, "Datos recibidos: " + string.Join(", ", message.Data));
-            }
         }
 
         private void SendNotificationToAndroid(string title, string body)
@@ -46,7 +44,6 @@ namespace PracticoMobileApp.Platforms.Android
             {
                 NotificationManager manager = (NotificationManager)GetSystemService(Context.NotificationService);
 
-                // Crear canal de notificación para Android 8+ (API 26+)
                 if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
                 {
                     NotificationChannel channel = new NotificationChannel(

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PracticoMobileApp.SitiosPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#0F0F0F">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
+
+        <!-- Header -->
+        <VerticalStackLayout Grid.Row="0" Padding="30,60,30,20">
+            <Label Text="🏆"
+                   FontSize="48"
+                   HorizontalOptions="Center"/>
+            <Label Text="tupenca.uy"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   HorizontalOptions="Center"
+                   Margin="0,8,0,4"/>
+            <Label Text="Elegí tu sitio para continuar"
+                   FontSize="14"
+                   TextColor="#888888"
+                   HorizontalOptions="Center"/>
+        </VerticalStackLayout>
+
+        <!-- Loading -->
+        <ActivityIndicator Grid.Row="1"
+                           x:Name="LoadingIndicator"
+                           IsRunning="True"
+                           IsVisible="True"
+                           Color="#4285F4"
+                           Margin="0,10,0,0"/>
+
+        <!-- Lista de sitios -->
+        <CollectionView Grid.Row="2"
+                        x:Name="SitiosCollection"
+                        Margin="20,10,20,0"
+                        SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border Margin="0,6,0,6"
+                            BackgroundColor="#1A1A2E"
+                            StrokeShape="RoundRectangle 14"
+                            Stroke="#2A2A4A"
+                            Padding="0">
+                        <Grid ColumnDefinitions="8,*" ColumnSpacing="0">
+                            <!-- Barra de color del sitio -->
+                            <BoxView Grid.Column="0"
+                                     Color="{Binding ColorPrincipal, TargetNullValue='#4285F4'}"
+                                     WidthRequest="8"
+                                     HorizontalOptions="Fill"/>
+
+                            <VerticalStackLayout Grid.Column="1" Padding="16,14,16,14" Spacing="4">
+                                <Label Text="{Binding Nombre}"
+                                       FontSize="17"
+                                       FontAttributes="Bold"
+                                       TextColor="White"/>
+                                <Label Text="{Binding Descripcion}"
+                                       FontSize="13"
+                                       TextColor="#AAAAAA"
+                                       LineBreakMode="TailTruncation"
+                                       MaxLines="2"/>
+                                <Label Text="{Binding TipoRegistro}"
+                                       FontSize="11"
+                                       TextColor="#666666"
+                                       Margin="0,4,0,0"/>
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnSitioTapped"
+                                                  CommandParameter="{Binding .}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Error message -->
+        <Label Grid.Row="2"
+               x:Name="ErrorLabel"
+               Text="No se pudieron cargar los sitios.\nVerificá tu conexión."
+               TextColor="#FF6B6B"
+               FontSize="14"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
+               HorizontalTextAlignment="Center"
+               IsVisible="False"/>
+
+        <!-- Footer -->
+        <Label Grid.Row="3"
+               Text="Seleccioná un sitio para ingresar"
+               FontSize="12"
+               TextColor="#444444"
+               HorizontalOptions="Center"
+               Margin="0,10,0,30"/>
+
+    </Grid>
+</ContentPage>

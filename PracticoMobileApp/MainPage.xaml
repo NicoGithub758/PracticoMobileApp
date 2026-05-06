@@ -3,6 +3,14 @@
              x:Class="PracticoMobileApp.MainPage">
 
     <VerticalStackLayout Padding="20" Spacing="15">
+        
+        <Label x:Name="WelcomeLabel"
+           FontSize="20"
+           FontAttributes="Bold"
+           TextColor="Black"
+           HorizontalOptions="Center"
+           Margin="0,20,0,0"/>
+        
         <Label Text="Buscador de Países" FontSize="24" HorizontalOptions="Center" FontAttributes="Bold"/>
 
         <!-- Campo de búsqueda (Entry) -->
