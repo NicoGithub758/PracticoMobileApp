@@ -50,7 +50,6 @@ public partial class LoginPage : ContentPage
 
         try
         {
-            // Paso 1: Login con Google via Auth0
             var loginResult = await _auth0Client.LoginAsync(new
             {
                 connection = "google-oauth2"
@@ -58,50 +57,51 @@ public partial class LoginPage : ContentPage
 
             if (loginResult.IsError)
             {
-                MostrarError($"Error de autenticación: {loginResult.Error}");
+                MostrarError($"Auth0 error: {loginResult.Error}");
                 return;
             }
 
-            // Paso 2: Enviar token a la API y obtener JWT propio
+            MostrarError($"Auth0 OK. Llamando API...");
+
             var auth0Token = loginResult.AccessToken;
             var apiResponse = await _apiService.LoginSocialAsync(auth0Token, sitioId);
 
             if (apiResponse == null)
             {
-                MostrarError("No se pudo conectar con el servidor.");
+                MostrarError("API devolvió null");
                 return;
             }
 
-            // Paso 3: Guardar JWT y datos del usuario
+            MostrarError($"API OK: {apiResponse.Nombre}");
+
             await SecureStorage.SetAsync("jwt_token", apiResponse.Jwt);
             Preferences.Set("usuario_id", apiResponse.UsuarioSitioId);
             Preferences.Set("usuario_nombre", apiResponse.Nombre);
             Preferences.Set("usuario_email", apiResponse.Email);
             Preferences.Set("sitio_id", apiResponse.SitioId);
 
-            System.Diagnostics.Debug.WriteLine($"[LOGIN OK] {apiResponse.Nombre} en sitio {apiResponse.SitioId}");
-
-            // Paso 4: Enviar token FCM a la API
             var fcmToken = Preferences.Get("fcm_token", string.Empty);
             if (!string.IsNullOrEmpty(fcmToken))
                 await _apiService.GuardarFcmTokenAsync(fcmToken);
 
-            // Paso 5: Navegar a MainPage
             await Shell.Current.GoToAsync("//MainPage");
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
-            string mensaje = ex.Message.Contains("cancel") || ex.Message.Contains("Cancel")
-                ? "Inicio de sesión cancelado."
-                : "Error al conectar. Revisá tu conexión.";
-
-            MostrarError(mensaje);
-            System.Diagnostics.Debug.WriteLine($"[LOGIN EXCEPTION] {ex}");
+            MostrarError($"Exception: {ex.Message}");
         }
         finally
         {
-            SetLoading(false);
+            LoadingIndicator.IsVisible = false;
+            LoadingIndicator.IsRunning = false;
+            GoogleButton.IsEnabled = true;
+            GoogleButton.Opacity = 1.0;
         }
+    }
+
+    private async void OnVolverTapped(object sender, TappedEventArgs e)
+    {
+        await Shell.Current.GoToAsync("//SitiosPage");
     }
 
     private void SetLoading(bool isLoading)
@@ -110,7 +110,6 @@ public partial class LoginPage : ContentPage
         LoadingIndicator.IsRunning = isLoading;
         GoogleButton.IsEnabled = !isLoading;
         GoogleButton.Opacity = isLoading ? 0.6 : 1.0;
-        ErrorLabel.IsVisible = false;
     }
 
     private void MostrarError(string mensaje)

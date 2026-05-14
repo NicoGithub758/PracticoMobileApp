@@ -43,11 +43,10 @@ public partial class SitiosPage : ContentPage
     {
         if (e.Parameter is not SitioDto sitio) return;
 
-        // Guardar el sitio elegido
-        Preferences.Set("sitio_id", sitio.Id);
-        Preferences.Set("sitio_nombre", sitio.Nombre);
+        Preferences.Set("sitio_id_temp", sitio.Id);
+        Preferences.Set("sitio_nombre_temp", sitio.Nombre);
 
-        // Navegar al Login pasando el sitio
+        // Navegar a LoginPage como ruta registrada (sin //)
         await Shell.Current.GoToAsync($"LoginPage?sitioId={sitio.Id}&sitioNombre={Uri.EscapeDataString(sitio.Nombre)}");
     }
 }

@@ -4,16 +4,15 @@
        xmlns:local="clr-namespace:PracticoMobileApp"
        x:Class="PracticoMobileApp.AppShell">
 
-    <!-- Pantalla de selección de sitios (primera pantalla) -->
     <ShellContent Title="Sitios"
                   ContentTemplate="{DataTemplate local:SitiosPage}"
                   Route="SitiosPage"
                   Shell.NavBarIsVisible="False"/>
 
-    <!-- Pantalla principal -->
     <ShellContent Title="Inicio"
                   ContentTemplate="{DataTemplate local:MainPage}"
                   Route="MainPage"/>
 
 </Shell>
+
 

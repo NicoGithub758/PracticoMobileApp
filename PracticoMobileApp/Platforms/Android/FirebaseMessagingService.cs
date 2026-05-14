@@ -17,8 +17,18 @@ namespace PracticoMobileApp.Platforms.Android
             base.OnNewToken(token);
             Log.Debug(TAG, "Token recibido: " + token);
 
-            // Guardar el token para usarlo al hacer login
             Preferences.Set("fcm_token", token);
+
+            // Enviar a la API en background si hay sesión
+            Task.Run(async () =>
+            {
+                var jwt = await SecureStorage.GetAsync("jwt_token");
+                if (!string.IsNullOrEmpty(jwt))
+                {
+                    var apiService = new PracticoMobileApp.Services.ApiService();
+                    await apiService.GuardarFcmTokenAsync(token);
+                }
+            });
         }
 
         public override void OnMessageReceived(RemoteMessage message)
