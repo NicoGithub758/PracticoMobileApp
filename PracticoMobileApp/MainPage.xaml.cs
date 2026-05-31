@@ -50,4 +50,8 @@ public partial class MainPage : ContentPage
 
         await Shell.Current.GoToAsync("//SitiosPage");
     }
+    private async void OnVerPencasClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new PencasPage());
+    }
 }

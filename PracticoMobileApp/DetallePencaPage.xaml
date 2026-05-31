@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PracticoMobileApp.DetallePencaPage"
+             Title="Detalle de Penca">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <!-- Tarjeta de info de la penca -->
+            <Border Stroke="#DDDDDD"
+                    StrokeThickness="1"
+                    Padding="20">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="12">
+                    <Label x:Name="NombrePencaLabel"
+                           Text="Nombre de la Penca"
+                           FontSize="22"
+                           FontAttributes="Bold"/>
+
+                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" RowSpacing="8">
+                        <Label Grid.Row="0" Grid.Column="0"
+                               x:Name="DeporteLabel"
+                               Text="Deporte: -"
+                               FontSize="14"
+                               TextColor="Gray"/>
+                        <Label Grid.Row="0" Grid.Column="1"
+                               x:Name="EquiposLabel"
+                               Text="Equipos: -"
+                               FontSize="14"
+                               TextColor="Gray"/>
+                        <Label Grid.Row="1" Grid.Column="0"
+                               x:Name="CostoLabel"
+                               Text="Costo: -"
+                               FontSize="14"
+                               TextColor="Gray"/>
+                        <Label Grid.Row="1" Grid.Column="1"
+                               x:Name="EstadoLabel"
+                               Text="Estado: -"
+                               FontSize="14"
+                               TextColor="Gray"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Tarjeta de mi participacion -->
+            <Border x:Name="ParticipacionBorder"
+                    Stroke="#4CAF50"
+                    StrokeThickness="2"
+                    BackgroundColor="#E8F5E9"
+                    Padding="20"
+                    IsVisible="False">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Tu Participacion"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="#2E7D32"/>
+                    <Label x:Name="MisPuntosLabel"
+                           Text="Puntos: 0"
+                           FontSize="14"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Mensaje si no participa -->
+            <Border x:Name="NoParticipaBorder"
+                    Stroke="#FF9800"
+                    StrokeThickness="2"
+                    BackgroundColor="#FFF3E0"
+                    Padding="20"
+                    IsVisible="False">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <Label Text="Todavia no participas en esta penca. Para unirte, realiza el pago desde la version web."
+                       FontSize="14"
+                       TextColor="#E65100"/>
+            </Border>
+
+            <!-- Botones de accion -->
+            <VerticalStackLayout Spacing="12">
+
+                <Button x:Name="BtnPosiciones"
+                        Text="Ver Tabla de Posiciones"
+                        Clicked="OnVerPosicionesClicked"
+                        BackgroundColor="#2196F3"
+                        TextColor="White"
+                        CornerRadius="10"
+                        HeightRequest="55"
+                        FontSize="16"/>
+
+                <Button x:Name="BtnPredicciones"
+                        Text="Hacer Predicciones"
+                        Clicked="OnHacerPrediccionesClicked"
+                        BackgroundColor="#9C27B0"
+                        TextColor="White"
+                        CornerRadius="10"
+                        HeightRequest="55"
+                        FontSize="16"/>
+
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

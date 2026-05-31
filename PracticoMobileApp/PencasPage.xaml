@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PracticoMobileApp.PencasPage"
+             Title="Pencas">
+
+    <Grid RowDefinitions="Auto,Auto,*" Padding="10">
+
+        <!-- Titulo -->
+        <Label Grid.Row="0"
+               Text="Pencas del Sitio"
+               FontSize="24"
+               FontAttributes="Bold"
+               HorizontalOptions="Center"
+               Margin="0,10,0,10"/>
+
+        <!-- Filtros -->
+        <HorizontalStackLayout Grid.Row="1"
+                               Spacing="10"
+                               HorizontalOptions="Center"
+                               Margin="0,0,0,10">
+            <Button x:Name="BtnTodas"
+                    Text="Todas"
+                    Clicked="OnFiltroTodasClicked"
+                    BackgroundColor="#2196F3"
+                    TextColor="White"
+                    CornerRadius="20"
+                    HeightRequest="40"
+                    Padding="20,0"/>
+            <Button x:Name="BtnMisPencas"
+                    Text="Mis Pencas"
+                    Clicked="OnFiltroMisPencasClicked"
+                    BackgroundColor="#E0E0E0"
+                    TextColor="Black"
+                    CornerRadius="20"
+                    HeightRequest="40"
+                    Padding="20,0"/>
+        </HorizontalStackLayout>
+
+        <!-- Lista de pencas -->
+        <RefreshView Grid.Row="2"
+                     x:Name="RefreshPencas"
+                     Refreshing="OnRefreshing">
+            <CollectionView x:Name="PencasCollectionView"
+                            SelectionMode="None">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Stroke="#DDDDDD"
+                                StrokeThickness="1"
+                                Padding="15"
+                                Margin="0,5">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
+
+                            <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="8">
+
+                                <!-- Fila 1: Nombre + Badge estado -->
+                                <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                                    <Label Grid.Column="0"
+                                           Text="{Binding NombrePenca}"
+                                           FontSize="18"
+                                           FontAttributes="Bold"
+                                           VerticalOptions="Center"/>
+
+                                    <Border Grid.Column="1"
+                                            BackgroundColor="{Binding EstadoColor}"
+                                            Padding="10,4">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="12"/>
+                                        </Border.StrokeShape>
+                                        <Label Text="{Binding EstadoTexto}"
+                                               TextColor="White"
+                                               FontSize="12"
+                                               FontAttributes="Bold"/>
+                                    </Border>
+                                </Grid>
+
+                                <!-- Fila 2: Info de la penca -->
+                                <HorizontalStackLayout Grid.Row="1" Spacing="15">
+                                    <Label Text="{Binding Deporte}"
+                                           FontSize="14"
+                                           TextColor="Gray"/>
+                                    <Label Text="{Binding CantidadEquipos, StringFormat='{0} equipos'}"
+                                           FontSize="14"
+                                           TextColor="Gray"/>
+                                    <Label Text="{Binding CostoTexto}"
+                                           FontSize="14"
+                                           TextColor="Gray"
+                                           FontAttributes="Bold"/>
+                                </HorizontalStackLayout>
+
+                                <!-- Fila 3: Boton accion -->
+                                <Button Grid.Row="2"
+                                        Text="Ver Detalle"
+                                        Clicked="OnVerDetalleClicked"
+                                        CommandParameter="{Binding .}"
+                                        BackgroundColor="#2196F3"
+                                        TextColor="White"
+                                        CornerRadius="8"
+                                        HeightRequest="44"/>
+
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <!-- Mensaje cuando no hay pencas -->
+                <CollectionView.EmptyView>
+                    <StackLayout Padding="20" VerticalOptions="Center">
+                        <Label x:Name="EmptyLabel"
+                               Text="No hay pencas disponibles"
+                               FontSize="16"
+                               HorizontalOptions="Center"
+                               TextColor="Gray"/>
+                    </StackLayout>
+                </CollectionView.EmptyView>
+
+            </CollectionView>
+        </RefreshView>
+
+        <!-- Indicador de carga -->
+        <ActivityIndicator Grid.Row="2"
+                          x:Name="LoadingIndicator"
+                          IsRunning="False"
+                          IsVisible="False"
+                          Color="#2196F3"
+                          VerticalOptions="Center"
+                          HorizontalOptions="Center"/>
+
+    </Grid>
+
+</ContentPage>

@@ -59,10 +59,15 @@ namespace PracticoMobileApp.Platforms.Android
                     NotificationChannel channel = new NotificationChannel(
                         "default_channel_id",
                         "Notificaciones",
-                        NotificationImportance.Default)
+                        NotificationImportance.High)
                     {
                         Description = "Canal de notificaciones general"
                     };
+
+                    channel.EnableVibration(true);
+                    channel.EnableLights(true);
+                    channel.LockscreenVisibility = NotificationVisibility.Public;
+
                     manager?.CreateNotificationChannel(channel);
                 }
 
@@ -71,7 +76,7 @@ namespace PracticoMobileApp.Platforms.Android
                     .SetContentTitle(title)
                     .SetContentText(body)
                     .SetAutoCancel(true)
-                    .SetPriority((int)NotificationPriority.High)
+                    .SetPriority((int)NotificationPriority.Max)
                     .SetDefaults(NotificationDefaults.All);
 
                 manager?.Notify(1, builder.Build());

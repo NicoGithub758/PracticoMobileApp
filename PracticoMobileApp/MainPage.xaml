@@ -21,7 +21,12 @@
                FontSize="16"
                TextColor="#888888"
                HorizontalOptions="Center"/>
-        
+
+        <Button Text="Ver Pencas"
+            Clicked="OnVerPencasClicked"
+            BackgroundColor="#2196F3"
+            TextColor="White"/>
+
         <Button Text="Cerrar sesión"
             BackgroundColor="#FF6B6B"
             TextColor="White"

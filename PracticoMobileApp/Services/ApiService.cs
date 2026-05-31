@@ -1,3 +1,4 @@
+using PracticoMobileApp.Models;
 using System.Net.Http.Json;
 using System.Text.Json;
 
@@ -8,7 +9,8 @@ namespace PracticoMobileApp.Services
         private readonly HttpClient _httpClient;
 
         // En emulador Android: 10.0.2.2 apunta a localhost de la PC
-        private const string BaseUrl = "https://10.0.2.2:7230";
+        //private const string BaseUrl = "https://10.0.2.2:7230";
+        private const string BaseUrl = "https://sincere-delight-production-006f.up.railway.app";
 
         public ApiService()
         {
@@ -91,6 +93,154 @@ namespace PracticoMobileApp.Services
                 return false;
             }
         }
+
+        /// <summary>
+        /// Obtiene la tabla de posiciones completa de una penca.
+        /// </summary>
+        public async Task<List<PosicionDTO>> ObtenerTablaPosicionesAsync(int pencaInstanciaId)
+        {
+            try
+            {
+                if (!await AgregarTokenAsync())
+                    return new List<PosicionDTO>();
+
+                var response = await _httpClient.GetAsync($"/api/posiciones/{pencaInstanciaId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    var posiciones = JsonSerializer.Deserialize<List<PosicionDTO>>(json, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+                    return posiciones ?? new List<PosicionDTO>();
+                }
+
+                System.Diagnostics.Debug.WriteLine($"[Posiciones] Error: {response.StatusCode}");
+                return new List<PosicionDTO>();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[Posiciones] Excepción: {ex.Message}");
+                return new List<PosicionDTO>();
+            }
+        }
+
+        /// <summary>
+        /// Obtiene la posición y puntos del usuario actual.
+        /// </summary>
+        public async Task<MiPosicionDTO?> ObtenerMiPosicionAsync(int pencaInstanciaId)
+        {
+            try
+            {
+                if (!await AgregarTokenAsync())
+                    return null;
+
+                var response = await _httpClient.GetAsync($"/api/posiciones/{pencaInstanciaId}/mi-posicion");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    var miPosicion = JsonSerializer.Deserialize<MiPosicionDTO>(json, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+                    return miPosicion;
+                }
+
+                System.Diagnostics.Debug.WriteLine($"[Mi Posición] Error: {response.StatusCode}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[Mi Posición] Excepción: {ex.Message}");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Obtiene el top N de la tabla de posiciones.
+        /// </summary>
+        public async Task<List<PosicionDTO>> ObtenerTopPosicionesAsync(int pencaInstanciaId, int cantidad = 10)
+        {
+            try
+            {
+                if (!await AgregarTokenAsync())
+                    return new List<PosicionDTO>();
+
+                var response = await _httpClient.GetAsync($"/api/posiciones/{pencaInstanciaId}/top/{cantidad}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    var posiciones = JsonSerializer.Deserialize<List<PosicionDTO>>(json, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+                    return posiciones ?? new List<PosicionDTO>();
+                }
+
+                System.Diagnostics.Debug.WriteLine($"[Top Posiciones] Error: {response.StatusCode}");
+                return new List<PosicionDTO>();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[Top Posiciones] Excepción: {ex.Message}");
+                return new List<PosicionDTO>();
+            }
+        }
+
+        /// <summary>
+        /// Obtiene todas las pencas del sitio del usuario.
+        /// El sitio se determina automaticamente por el JWT en la API.
+        /// </summary>
+        public async Task<List<PencaInstanciaMobile>> ObtenerPencasDelSitioAsync()
+        {
+            try
+            {
+                if (!await AgregarTokenAsync())
+                    return new List<PencaInstanciaMobile>();
+
+                var response = await _httpClient.GetAsync("/api/mobile/pencas");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    var pencas = JsonSerializer.Deserialize<List<PencaInstanciaMobile>>(json, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+                    return pencas ?? new List<PencaInstanciaMobile>();
+                }
+
+                System.Diagnostics.Debug.WriteLine($"[Pencas] Error: {response.StatusCode}");
+                return new List<PencaInstanciaMobile>();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[Pencas] Excepcion: {ex.Message}");
+                return new List<PencaInstanciaMobile>();
+            }
+        }
+
+        /// <summary>
+        /// Agrega el JWT guardado al header Authorization del HttpClient.
+        /// Llamar antes de cualquier request que requiera autenticacion.
+        /// </summary>
+        private async Task<bool> AgregarTokenAsync()
+        {
+            var jwt = await SecureStorage.GetAsync("jwt_token");
+            if (string.IsNullOrEmpty(jwt))
+            {
+                System.Diagnostics.Debug.WriteLine("[AUTH] No hay JWT guardado");
+                return false;
+            }
+
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+            return true;
+        }
+
     }
 
     // DTOs del lado mobile
