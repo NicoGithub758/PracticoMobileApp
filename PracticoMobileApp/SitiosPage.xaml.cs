@@ -46,7 +46,12 @@ public partial class SitiosPage : ContentPage
         Preferences.Set("sitio_id_temp", sitio.Id);
         Preferences.Set("sitio_nombre_temp", sitio.Nombre);
 
-        // Navegar a LoginPage como ruta registrada (sin //)
-        await Shell.Current.GoToAsync($"LoginPage?sitioId={sitio.Id}&sitioNombre={Uri.EscapeDataString(sitio.Nombre)}");
+        // Navegar a AuthOptionsPage pasandole sitioId, nombre y TipoRegistro
+        // La pagina decide que botones mostrar segun el tipo de registro del sitio
+        var url = $"AuthOptionsPage?sitioId={sitio.Id}" +
+                  $"&sitioNombre={Uri.EscapeDataString(sitio.Nombre)}" +
+                  $"&tipoRegistro={sitio.TipoRegistro}";
+
+        await Shell.Current.GoToAsync(url);
     }
 }

@@ -27,6 +27,14 @@
             BackgroundColor="#2196F3"
             TextColor="White"/>
 
+        <Button Text="Notificaciones"
+            Clicked="OnConfiguracionTapped"
+            BackgroundColor="#4285F4"
+            TextColor="White"
+            CornerRadius="10"
+            HeightRequest="48"
+            Margin="0,8"/>
+
         <Button Text="Cerrar sesión"
             BackgroundColor="#FF6B6B"
             TextColor="White"

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PracticoMobileApp.RegistroPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#0F0F0F">
+
+    <ScrollView>
+        <VerticalStackLayout VerticalOptions="Center"
+                             HorizontalOptions="Fill"
+                             Padding="40,40"
+                             Spacing="0">
+
+            <!-- Logo -->
+            <Frame WidthRequest="70"
+                   HeightRequest="70"
+                   CornerRadius="18"
+                   BackgroundColor="#1A1A2E"
+                   BorderColor="#4285F4"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,20">
+                <Label Text="🏆"
+                       FontSize="34"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"/>
+            </Frame>
+
+            <Label Text="Crear cuenta"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,4"/>
+
+            <Label x:Name="SitioLabel"
+                   Text=""
+                   FontSize="13"
+                   TextColor="#4285F4"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,8"/>
+
+            <!-- Aviso opcional -->
+            <Label x:Name="AvisoLabel"
+                   Text=""
+                   FontSize="12"
+                   TextColor="#FFC107"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   IsVisible="False"
+                   Margin="0,0,0,16"/>
+
+            <!-- Nombre -->
+            <Label Text="Nombre"
+                   FontSize="13"
+                   TextColor="#AAAAAA"
+                   Margin="0,16,0,4"/>
+            <Frame BackgroundColor="#1A1A2E"
+                   BorderColor="#333333"
+                   CornerRadius="10"
+                   Padding="14,0"
+                   HeightRequest="50"
+                   HasShadow="False"
+                   Margin="0,0,0,12">
+                <Entry x:Name="NombreEntry"
+                       Placeholder="Tu nombre completo"
+                       PlaceholderColor="#666666"
+                       TextColor="White"
+                       BackgroundColor="Transparent"/>
+            </Frame>
+
+            <!-- Email -->
+            <Label Text="Email"
+                   FontSize="13"
+                   TextColor="#AAAAAA"
+                   Margin="0,0,0,4"/>
+            <Frame BackgroundColor="#1A1A2E"
+                   BorderColor="#333333"
+                   CornerRadius="10"
+                   Padding="14,0"
+                   HeightRequest="50"
+                   HasShadow="False"
+                   Margin="0,0,0,12">
+                <Entry x:Name="EmailEntry"
+                       Placeholder="tu@email.com"
+                       PlaceholderColor="#666666"
+                       TextColor="White"
+                       Keyboard="Email"
+                       BackgroundColor="Transparent"/>
+            </Frame>
+
+            <!-- Password -->
+            <Label Text="Contraseña"
+                   FontSize="13"
+                   TextColor="#AAAAAA"
+                   Margin="0,0,0,4"/>
+            <Frame BackgroundColor="#1A1A2E"
+                   BorderColor="#333333"
+                   CornerRadius="10"
+                   Padding="14,0"
+                   HeightRequest="50"
+                   HasShadow="False"
+                   Margin="0,0,0,12">
+                <Entry x:Name="PasswordEntry"
+                       Placeholder="Mínimo 6 caracteres"
+                       PlaceholderColor="#666666"
+                       TextColor="White"
+                       IsPassword="True"
+                       BackgroundColor="Transparent"/>
+            </Frame>
+
+            <!-- Confirmar password -->
+            <Label Text="Confirmar contraseña"
+                   FontSize="13"
+                   TextColor="#AAAAAA"
+                   Margin="0,0,0,4"/>
+            <Frame BackgroundColor="#1A1A2E"
+                   BorderColor="#333333"
+                   CornerRadius="10"
+                   Padding="14,0"
+                   HeightRequest="50"
+                   HasShadow="False"
+                   Margin="0,0,0,12">
+                <Entry x:Name="PasswordConfirmEntry"
+                       Placeholder="Repetí la contraseña"
+                       PlaceholderColor="#666666"
+                       TextColor="White"
+                       IsPassword="True"
+                       BackgroundColor="Transparent"/>
+            </Frame>
+
+            <!-- Token de invitacion (solo si TipoRegistro = SoloConInvitacion) -->
+            <StackLayout x:Name="InvitacionStack" IsVisible="False">
+                <Label Text="Código de invitación"
+                       FontSize="13"
+                       TextColor="#AAAAAA"
+                       Margin="0,0,0,4"/>
+                <Frame BackgroundColor="#1A1A2E"
+                       BorderColor="#FFC107"
+                       CornerRadius="10"
+                       Padding="14,0"
+                       HeightRequest="50"
+                       HasShadow="False"
+                       Margin="0,0,0,12">
+                    <Entry x:Name="TokenInvitacionEntry"
+                           Placeholder="Pegá tu código aquí"
+                           PlaceholderColor="#666666"
+                           TextColor="White"
+                           BackgroundColor="Transparent"/>
+                </Frame>
+            </StackLayout>
+
+            <!-- Boton de registro -->
+            <Frame x:Name="RegistrarButton"
+                   BackgroundColor="#4285F4"
+                   BorderColor="Transparent"
+                   CornerRadius="14"
+                   Padding="0"
+                   HeightRequest="56"
+                   HasShadow="True"
+                   Margin="0,16,0,0">
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnRegistrarTapped"/>
+                </Frame.GestureRecognizers>
+                <Label Text="Crear cuenta"
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"/>
+            </Frame>
+
+            <ActivityIndicator x:Name="LoadingIndicator"
+                               IsRunning="False"
+                               IsVisible="False"
+                               Color="#4285F4"
+                               Margin="0,20,0,0"/>
+
+            <Label x:Name="ErrorLabel"
+                   Text=""
+                   TextColor="#FF6B6B"
+                   FontSize="13"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   IsVisible="False"
+                   Margin="0,16,0,0"/>
+
+            <!-- Volver -->
+            <Label Text="← Volver"
+                   FontSize="13"
+                   TextColor="#888888"
+                   HorizontalOptions="Center"
+                   Margin="0,32,0,0">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnVolverTapped"/>
+                </Label.GestureRecognizers>
+            </Label>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PracticoMobileApp.SolicitudPendientePage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#0F0F0F">
+
+    <Grid>
+        <VerticalStackLayout VerticalOptions="Center"
+                             HorizontalOptions="Fill"
+                             Padding="40"
+                             Spacing="0">
+
+            <!-- Icono -->
+            <Frame WidthRequest="100"
+                   HeightRequest="100"
+                   CornerRadius="25"
+                   BackgroundColor="#1A1A2E"
+                   BorderColor="#FFC107"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,30">
+                <Label Text="⏳"
+                       FontSize="50"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"/>
+            </Frame>
+
+            <Label Text="Solicitud enviada"
+                   FontSize="26"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,16"/>
+
+            <Label x:Name="MensajeLabel"
+                   Text="Tu solicitud fue enviada correctamente."
+                   FontSize="15"
+                   TextColor="#CCCCCC"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   Margin="0,0,0,24"/>
+
+            <Frame BackgroundColor="#1A1A2E"
+                   BorderColor="#333333"
+                   CornerRadius="12"
+                   Padding="20"
+                   HasShadow="False"
+                   Margin="0,0,0,30">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="¿Qué pasa ahora?"
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           TextColor="#4285F4"/>
+                    <Label Text="• Un administrador del sitio revisará tu solicitud"
+                           FontSize="13"
+                           TextColor="#AAAAAA"/>
+                    <Label Text="• Cuando sea aprobada, podrás iniciar sesión con tu email y contraseña"
+                           FontSize="13"
+                           TextColor="#AAAAAA"/>
+                    <Label Text="• Te recomendamos volver a intentar ingresar en unas horas"
+                           FontSize="13"
+                           TextColor="#AAAAAA"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Boton para volver a intentar el login -->
+            <Frame BackgroundColor="#4285F4"
+                   BorderColor="Transparent"
+                   CornerRadius="14"
+                   Padding="0"
+                   HeightRequest="52"
+                   HasShadow="True"
+                   Margin="0,0,0,12">
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnIntentarLoginTapped"/>
+                </Frame.GestureRecognizers>
+                <Label Text="Probar iniciar sesión"
+                       FontSize="15"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"/>
+            </Frame>
+
+            <!-- Boton volver a sitios -->
+            <Frame BackgroundColor="Transparent"
+                   BorderColor="#444444"
+                   CornerRadius="14"
+                   Padding="0"
+                   HeightRequest="52"
+                   HasShadow="False">
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnVolverSitiosTapped"/>
+                </Frame.GestureRecognizers>
+                <Label Text="Volver al inicio"
+                       FontSize="15"
+                       TextColor="#AAAAAA"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"/>
+            </Frame>
+
+        </VerticalStackLayout>
+    </Grid>
+
+</ContentPage>

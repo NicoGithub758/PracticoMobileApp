@@ -2,31 +2,33 @@
 
 public partial class AppShell : Shell
 {
-    private bool _navegacionIniciada = false;
-
     public AppShell()
     {
         InitializeComponent();
 
-        Routing.RegisterRoute("LoginPage", typeof(LoginPage));
+        // Registrar rutas que NO estan en el Shell pero a las que vamos a navegar
+        Routing.RegisterRoute(nameof(AuthOptionsPage), typeof(AuthOptionsPage));
+        Routing.RegisterRoute(nameof(LoginInternoPage), typeof(LoginInternoPage));
+        Routing.RegisterRoute(nameof(RegistroPage), typeof(RegistroPage));
+        Routing.RegisterRoute(nameof(SolicitudPendientePage), typeof(SolicitudPendientePage));
+        Routing.RegisterRoute(nameof(PreferenciasNotificacionesPage), typeof(PreferenciasNotificacionesPage));
 
-        _ = VerificarSesionAsync();
+        VerificarSesionAsync();
     }
 
-    private async Task VerificarSesionAsync()
+    private async void VerificarSesionAsync()
     {
-        if (_navegacionIniciada) return;
-        _navegacionIniciada = true;
-
-        await Task.Delay(300);
+        // Pequeña espera para que el Shell termine de inicializar antes de navegar
+        await Task.Delay(50);
 
         var jwt = await SecureStorage.GetAsync("jwt_token");
-        var sitioId = Preferences.Get("sitio_id", 0);
 
-        if (!string.IsNullOrEmpty(jwt) && sitioId > 0)
-            await GoToAsync("//MainPage");
-        else
-            await GoToAsync("//SitiosPage");
+        if (!string.IsNullOrEmpty(jwt))
+        {
+            // Hay sesion guardada -> ir a MainPage
+            await Shell.Current.GoToAsync("//MainPage");
+        }
+        // Si no hay JWT, queda en SitiosPage (que es la ShellContent default)
     }
 }
 

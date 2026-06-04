@@ -28,6 +28,10 @@ namespace PracticoMobileApp.Services
             _httpClient.Timeout = TimeSpan.FromSeconds(15);
         }
 
+        // ====================================================================
+        //  ENDPOINTS PUBLICOS (no requieren JWT)
+        // ====================================================================
+
         /// <summary>
         /// Obtiene la lista de sitios activos desde la API.
         /// </summary>
@@ -46,29 +50,93 @@ namespace PracticoMobileApp.Services
         }
 
         /// <summary>
+        /// Login interno con email + password.
+        /// Devuelve (response, mensajeError). Si response != null, login OK.
+        /// </summary>
+        public async Task<(MobileAuthResponse? response, string? error)> LoginInternoAsync(
+            string email, string password, int sitioId)
+        {
+            try
+            {
+                var body = new { email, password, sitioId };
+                var response = await _httpClient.PostAsJsonAsync("/api/mobile/auth/login", body);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var data = await response.Content.ReadFromJsonAsync<MobileAuthResponse>();
+                    return (data, null);
+                }
+
+                var errorMsg = await LeerMensajeError(response);
+                return (null, errorMsg);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[API ERROR] LoginInterno: {ex.Message}");
+                return (null, "No se pudo conectar con el servidor.");
+            }
+        }
+
+        /// <summary>
+        /// Registra un nuevo usuario.
+        /// Si el sitio es Abierta, devuelve JWT y EstadoSolicitud="Activo".
+        /// Si el sitio requiere aprobacion/invitacion, devuelve JWT vacio y EstadoSolicitud="Pendiente".
+        /// </summary>
+        public async Task<(MobileAuthResponse? response, string? error)> RegistrarAsync(
+            string nombre, string email, string password, int sitioId, string? tokenInvitacion = null)
+        {
+            try
+            {
+                var body = new { nombre, email, password, sitioId, tokenInvitacion };
+                var response = await _httpClient.PostAsJsonAsync("/api/mobile/auth/register", body);
+
+                // 200 (Activo) o 202 (Pendiente) son ambos exitosos
+                if (response.IsSuccessStatusCode)
+                {
+                    var data = await response.Content.ReadFromJsonAsync<MobileAuthResponse>();
+                    return (data, null);
+                }
+
+                var errorMsg = await LeerMensajeError(response);
+                return (null, errorMsg);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[API ERROR] Registrar: {ex.Message}");
+                return (null, "No se pudo conectar con el servidor.");
+            }
+        }
+
+        /// <summary>
         /// Login social con Google via Auth0. Devuelve el JWT propio de la plataforma.
         /// </summary>
-        public async Task<LoginResponse?> LoginSocialAsync(string auth0Token, int sitioId)
+        public async Task<(MobileAuthResponse? response, string? error)> LoginSocialAsync(
+            string auth0Token, int sitioId)
         {
             try
             {
                 var body = new { auth0Token, sitioId };
                 var response = await _httpClient.PostAsJsonAsync("/api/mobile/auth/social", body);
 
-                if (!response.IsSuccessStatusCode)
+                if (response.IsSuccessStatusCode)
                 {
-                    System.Diagnostics.Debug.WriteLine($"[API ERROR] LoginSocial: {response.StatusCode}");
-                    return null;
+                    var data = await response.Content.ReadFromJsonAsync<MobileAuthResponse>();
+                    return (data, null);
                 }
 
-                return await response.Content.ReadFromJsonAsync<LoginResponse>();
+                var errorMsg = await LeerMensajeError(response);
+                return (null, errorMsg);
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"[API ERROR] LoginSocial: {ex.Message}");
-                return null;
+                return (null, "No se pudo conectar con el servidor.");
             }
         }
+
+        // ====================================================================
+        //  ENDPOINTS AUTENTICADOS (requieren JWT)
+        // ====================================================================
 
         /// <summary>
         /// Registra el token FCM del dispositivo en la API.
@@ -77,11 +145,7 @@ namespace PracticoMobileApp.Services
         {
             try
             {
-                var jwt = await SecureStorage.GetAsync("jwt_token");
-                if (string.IsNullOrEmpty(jwt)) return false;
-
-                _httpClient.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+                if (!await AgregarTokenAsync()) return false;
 
                 var body = new { fcmToken };
                 var response = await _httpClient.PostAsJsonAsync("/api/mobile/auth/fcm-token", body);
@@ -90,6 +154,24 @@ namespace PracticoMobileApp.Services
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"[API ERROR] GuardarFcmToken: {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Limpia el token FCM del usuario al cerrar sesion.
+        /// </summary>
+        public async Task<bool> LimpiarFcmTokenAsync()
+        {
+            try
+            {
+                if (!await AgregarTokenAsync()) return false;
+                var response = await _httpClient.DeleteAsync("/api/mobile/auth/fcm-token");
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[API ERROR] LimpiarFcmToken: {ex.Message}");
                 return false;
             }
         }
@@ -126,9 +208,6 @@ namespace PracticoMobileApp.Services
             }
         }
 
-        /// <summary>
-        /// Obtiene la posición y puntos del usuario actual.
-        /// </summary>
         public async Task<MiPosicionDTO?> ObtenerMiPosicionAsync(int pencaInstanciaId)
         {
             try
@@ -148,7 +227,6 @@ namespace PracticoMobileApp.Services
                     return miPosicion;
                 }
 
-                System.Diagnostics.Debug.WriteLine($"[Mi Posición] Error: {response.StatusCode}");
                 return null;
             }
             catch (Exception ex)
@@ -158,9 +236,6 @@ namespace PracticoMobileApp.Services
             }
         }
 
-        /// <summary>
-        /// Obtiene el top N de la tabla de posiciones.
-        /// </summary>
         public async Task<List<PosicionDTO>> ObtenerTopPosicionesAsync(int pencaInstanciaId, int cantidad = 10)
         {
             try
@@ -180,7 +255,6 @@ namespace PracticoMobileApp.Services
                     return posiciones ?? new List<PosicionDTO>();
                 }
 
-                System.Diagnostics.Debug.WriteLine($"[Top Posiciones] Error: {response.StatusCode}");
                 return new List<PosicionDTO>();
             }
             catch (Exception ex)
@@ -190,10 +264,6 @@ namespace PracticoMobileApp.Services
             }
         }
 
-        /// <summary>
-        /// Obtiene todas las pencas del sitio del usuario.
-        /// El sitio se determina automaticamente por el JWT en la API.
-        /// </summary>
         public async Task<List<PencaInstanciaMobile>> ObtenerPencasDelSitioAsync()
         {
             try
@@ -213,7 +283,6 @@ namespace PracticoMobileApp.Services
                     return pencas ?? new List<PencaInstanciaMobile>();
                 }
 
-                System.Diagnostics.Debug.WriteLine($"[Pencas] Error: {response.StatusCode}");
                 return new List<PencaInstanciaMobile>();
             }
             catch (Exception ex)
@@ -224,8 +293,61 @@ namespace PracticoMobileApp.Services
         }
 
         /// <summary>
+        /// Obtiene las preferencias de notificaciones del usuario actual.
+        /// Si nunca fueron configuradas, la API devuelve los defaults (todos true).
+        /// </summary>
+        public async Task<PreferenciasNotificacionDTO?> ObtenerPreferenciasAsync()
+        {
+            try
+            {
+                if (!await AgregarTokenAsync()) return null;
+
+                var response = await _httpClient.GetAsync("/api/mobile/preferencias/notificaciones");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    return JsonSerializer.Deserialize<PreferenciasNotificacionDTO>(json, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+                }
+
+                System.Diagnostics.Debug.WriteLine($"[Preferencias] Error: {response.StatusCode}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[Preferencias] Excepcion: {ex.Message}");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Guarda las preferencias de notificaciones del usuario actual.
+        /// </summary>
+        public async Task<bool> GuardarPreferenciasAsync(PreferenciasNotificacionDTO prefs)
+        {
+            try
+            {
+                if (!await AgregarTokenAsync()) return false;
+
+                var response = await _httpClient.PutAsJsonAsync("/api/mobile/preferencias/notificaciones", prefs);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[Preferencias] Error al guardar: {ex.Message}");
+                return false;
+            }
+        }
+
+        // ====================================================================
+        //  HELPERS
+        // ====================================================================
+
+        /// <summary>
         /// Agrega el JWT guardado al header Authorization del HttpClient.
-        /// Llamar antes de cualquier request que requiera autenticacion.
         /// </summary>
         private async Task<bool> AgregarTokenAsync()
         {
@@ -241,9 +363,27 @@ namespace PracticoMobileApp.Services
             return true;
         }
 
+        /// <summary>
+        /// Intenta extraer el campo "mensaje" del body de respuesta de error.
+        /// </summary>
+        private async Task<string> LeerMensajeError(HttpResponseMessage response)
+        {
+            try
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                using var doc = JsonDocument.Parse(content);
+                if (doc.RootElement.TryGetProperty("mensaje", out var mensaje))
+                    return mensaje.GetString() ?? "Error desconocido.";
+            }
+            catch { }
+            return $"Error {(int)response.StatusCode}.";
+        }
     }
 
-    // DTOs del lado mobile
+    // ========================================================================
+    //  DTOs del lado mobile
+    // ========================================================================
+
     public class SitioDto
     {
         public int Id { get; set; }
@@ -254,12 +394,25 @@ namespace PracticoMobileApp.Services
         public string TipoRegistro { get; set; } = string.Empty;
     }
 
-    public class LoginResponse
+    /// <summary>
+    /// Respuesta unificada de los endpoints de autenticacion mobile.
+    /// </summary>
+    public class MobileAuthResponse
     {
         public string Jwt { get; set; } = string.Empty;
         public int UsuarioSitioId { get; set; }
         public int SitioId { get; set; }
         public string Nombre { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
+
+        /// <summary>"Activo" (login OK con JWT) o "Pendiente" (esperando aprobacion).</summary>
+        public string EstadoSolicitud { get; set; } = "Activo";
+
+        /// <summary>Mensaje opcional para mostrar al usuario.</summary>
+        public string? Mensaje { get; set; }
     }
+
+    // Alias por compatibilidad con codigo viejo
+    public class LoginResponse : MobileAuthResponse { }
 }
+

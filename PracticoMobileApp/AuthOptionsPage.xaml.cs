@@ -1,0 +1,180 @@
+using Auth0.OidcClient;
+using PracticoMobileApp.Services;
+
+namespace PracticoMobileApp;
+
+[QueryProperty(nameof(SitioId), "sitioId")]
+[QueryProperty(nameof(SitioNombre), "sitioNombre")]
+[QueryProperty(nameof(TipoRegistro), "tipoRegistro")]
+public partial class AuthOptionsPage : ContentPage
+{
+    private readonly Auth0Client _auth0Client;
+    private readonly ApiService _apiService;
+
+    public string SitioId { get; set; } = string.Empty;
+    public string SitioNombre { get; set; } = string.Empty;
+    public string TipoRegistro { get; set; } = string.Empty;
+
+    public AuthOptionsPage()
+    {
+        InitializeComponent();
+
+        _auth0Client = new Auth0Client(new Auth0ClientOptions
+        {
+            Domain = "dev-tohysoy6fqmar1v7.us.auth0.com",
+            ClientId = "5Kv0vRTwoYKaKFoJYDhDEvnj1DFHAFi4",
+            RedirectUri = "com.companyname.practicomobileapp://dev-tohysoy6fqmar1v7.us.auth0.com/android/com.companyname.practicomobileapp/callback",
+            PostLogoutRedirectUri = "com.companyname.practicomobileapp://dev-tohysoy6fqmar1v7.us.auth0.com/android/com.companyname.practicomobileapp/callback",
+            Scope = "openid profile email"
+        });
+
+        _apiService = new ApiService();
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+
+        if (!string.IsNullOrEmpty(SitioNombre))
+            SitioLabel.Text = $"Ingresando a: {Uri.UnescapeDataString(SitioNombre)}";
+
+        // Mostrar/ocultar botones segun el tipo de registro del sitio
+        ConfigurarBotonesSegunTipoRegistro();
+    }
+
+    /// <summary>
+    /// Ajusta que botones mostrar y avisos al usuario segun TipoRegistro del sitio.
+    /// - Abierta: Login + Registro + Google
+    /// - AbiertaConAutorizacion: Login + Registro + Google (con aviso de aprobacion)
+    /// - SoloConInvitacion: Login + Registro (sin Google, con aviso)
+    /// - Cerrada: solo Login (sin opcion de registrarse)
+    /// </summary>
+    private void ConfigurarBotonesSegunTipoRegistro()
+    {
+        // Defaults
+        RegistrarseButton.IsVisible = true;
+        GoogleButton.IsVisible = true;
+        OrLabel.IsVisible = true;
+        AvisoLabel.IsVisible = false;
+
+        switch (TipoRegistro)
+        {
+            case "Abierta":
+                // Por defecto: todo visible, sin aviso
+                break;
+
+            case "AbiertaConAutorizacion":
+                AvisoLabel.Text = "ℹ️ El registro requiere aprobación del administrador.";
+                AvisoLabel.IsVisible = true;
+                break;
+
+            case "SoloConInvitacion":
+                AvisoLabel.Text = "ℹ️ Necesitás un código de invitación para registrarte.";
+                AvisoLabel.IsVisible = true;
+                GoogleButton.IsVisible = false;
+                OrLabel.IsVisible = false;
+                break;
+
+            case "Cerrada":
+                AvisoLabel.Text = "ℹ️ Este sitio no admite nuevos registros.";
+                AvisoLabel.IsVisible = true;
+                RegistrarseButton.IsVisible = false;
+                GoogleButton.IsVisible = false;
+                OrLabel.IsVisible = false;
+                break;
+        }
+    }
+
+    private async void OnLoginInternoTapped(object sender, TappedEventArgs e)
+    {
+        // Navegar a la pagina de login interno pasandole el sitioId
+        await Shell.Current.GoToAsync($"LoginInternoPage?sitioId={SitioId}&sitioNombre={Uri.EscapeDataString(SitioNombre)}");
+    }
+
+    private async void OnRegistrarseTapped(object sender, TappedEventArgs e)
+    {
+        // Navegar a la pagina de registro
+        await Shell.Current.GoToAsync($"RegistroPage?sitioId={SitioId}&sitioNombre={Uri.EscapeDataString(SitioNombre)}&tipoRegistro={TipoRegistro}");
+    }
+
+    private async void OnGoogleLoginTapped(object sender, TappedEventArgs e)
+    {
+        if (!int.TryParse(SitioId, out int sitioId) || sitioId <= 0)
+        {
+            MostrarError("No se seleccionó un sitio válido.");
+            return;
+        }
+
+        SetLoading(true);
+
+        try
+        {
+            var loginResult = await _auth0Client.LoginAsync(new
+            {
+                connection = "google-oauth2"
+            });
+
+            if (loginResult.IsError)
+            {
+                MostrarError($"Error de Google: {loginResult.Error}");
+                return;
+            }
+
+            var auth0Token = loginResult.AccessToken;
+            var (apiResponse, error) = await _apiService.LoginSocialAsync(auth0Token, sitioId);
+
+            if (apiResponse == null)
+            {
+                MostrarError(error ?? "No se pudo completar el login.");
+                return;
+            }
+
+            // Guardar datos del usuario
+            await SecureStorage.SetAsync("jwt_token", apiResponse.Jwt);
+            Preferences.Set("usuario_id", apiResponse.UsuarioSitioId);
+            Preferences.Set("usuario_nombre", apiResponse.Nombre);
+            Preferences.Set("usuario_email", apiResponse.Email);
+            Preferences.Set("sitio_id", apiResponse.SitioId);
+            Preferences.Set("sitio_nombre", Uri.UnescapeDataString(SitioNombre));
+
+            // Enviar FCM token si esta disponible
+            var fcmToken = Preferences.Get("fcm_token", string.Empty);
+            if (!string.IsNullOrEmpty(fcmToken))
+                await _apiService.GuardarFcmTokenAsync(fcmToken);
+
+            await Shell.Current.GoToAsync("//MainPage");
+        }
+        catch (Exception ex)
+        {
+            MostrarError($"Error: {ex.Message}");
+        }
+        finally
+        {
+            SetLoading(false);
+        }
+    }
+
+    private async void OnVolverTapped(object sender, TappedEventArgs e)
+    {
+        await Shell.Current.GoToAsync("//SitiosPage");
+    }
+
+    private void SetLoading(bool isLoading)
+    {
+        LoadingIndicator.IsVisible = isLoading;
+        LoadingIndicator.IsRunning = isLoading;
+        LoginInternoButton.IsEnabled = !isLoading;
+        RegistrarseButton.IsEnabled = !isLoading;
+        GoogleButton.IsEnabled = !isLoading;
+        GoogleButton.Opacity = isLoading ? 0.6 : 1.0;
+
+        if (isLoading)
+            ErrorLabel.IsVisible = false;
+    }
+
+    private void MostrarError(string mensaje)
+    {
+        ErrorLabel.Text = mensaje;
+        ErrorLabel.IsVisible = true;
+    }
+}

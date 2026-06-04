@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PracticoMobileApp.PreferenciasNotificacionesPage"
+             Title="Notificaciones"
+             BackgroundColor="#0F0F0F">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="0">
+
+            <!-- Header -->
+            <Label Text="Notificaciones"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   Margin="0,16,0,4"/>
+
+            <Label Text="Elegí qué notificaciones querés recibir en este dispositivo."
+                   FontSize="13"
+                   TextColor="#AAAAAA"
+                   Margin="0,0,0,24"/>
+
+            <!-- Indicador de carga inicial -->
+            <ActivityIndicator x:Name="LoadingIndicator"
+                               IsRunning="True"
+                               IsVisible="True"
+                               Color="#4285F4"
+                               Margin="0,40,0,0"/>
+
+            <!-- Contenedor de switches (oculto hasta que cargue) -->
+            <VerticalStackLayout x:Name="OpcionesStack"
+                                 IsVisible="False"
+                                 Spacing="12">
+
+                <!-- Resultados -->
+                <Frame BackgroundColor="#1A1A2E"
+                       BorderColor="#333333"
+                       CornerRadius="12"
+                       Padding="16"
+                       HasShadow="False">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Label Grid.Column="0"
+                               Text="⚽"
+                               FontSize="28"
+                               VerticalOptions="Center"/>
+                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                            <Label Text="Resultados"
+                                   FontSize="15"
+                                   FontAttributes="Bold"
+                                   TextColor="White"/>
+                            <Label Text="Cuando se confirma el resultado de un partido"
+                                   FontSize="12"
+                                   TextColor="#AAAAAA"/>
+                        </VerticalStackLayout>
+                        <Switch x:Name="SwitchResultados"
+                                Grid.Column="2"
+                                VerticalOptions="Center"
+                                OnColor="#4285F4"
+                                ThumbColor="White"/>
+                    </Grid>
+                </Frame>
+
+                <!-- Partidos -->
+                <Frame BackgroundColor="#1A1A2E"
+                       BorderColor="#333333"
+                       CornerRadius="12"
+                       Padding="16"
+                       HasShadow="False">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Label Grid.Column="0"
+                               Text="⏰"
+                               FontSize="28"
+                               VerticalOptions="Center"/>
+                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                            <Label Text="Partidos"
+                                   FontSize="15"
+                                   FontAttributes="Bold"
+                                   TextColor="White"/>
+                            <Label Text="Recordatorios antes de que cierre un partido"
+                                   FontSize="12"
+                                   TextColor="#AAAAAA"/>
+                        </VerticalStackLayout>
+                        <Switch x:Name="SwitchPartidos"
+                                Grid.Column="2"
+                                VerticalOptions="Center"
+                                OnColor="#4285F4"
+                                ThumbColor="White"/>
+                    </Grid>
+                </Frame>
+
+                <!-- Generales -->
+                <Frame BackgroundColor="#1A1A2E"
+                       BorderColor="#333333"
+                       CornerRadius="12"
+                       Padding="16"
+                       HasShadow="False">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Label Grid.Column="0"
+                               Text="📢"
+                               FontSize="28"
+                               VerticalOptions="Center"/>
+                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                            <Label Text="Anuncios generales"
+                                   FontSize="15"
+                                   FontAttributes="Bold"
+                                   TextColor="White"/>
+                            <Label Text="Mensajes y novedades del administrador del sitio"
+                                   FontSize="12"
+                                   TextColor="#AAAAAA"/>
+                        </VerticalStackLayout>
+                        <Switch x:Name="SwitchGenerales"
+                                Grid.Column="2"
+                                VerticalOptions="Center"
+                                OnColor="#4285F4"
+                                ThumbColor="White"/>
+                    </Grid>
+                </Frame>
+
+                <!-- Ranking -->
+                <Frame BackgroundColor="#1A1A2E"
+                       BorderColor="#333333"
+                       CornerRadius="12"
+                       Padding="16"
+                       HasShadow="False">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Label Grid.Column="0"
+                               Text="📈"
+                               FontSize="28"
+                               VerticalOptions="Center"/>
+                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                            <Label Text="Ranking"
+                                   FontSize="15"
+                                   FontAttributes="Bold"
+                                   TextColor="White"/>
+                            <Label Text="Cuando cambia tu posición en la tabla"
+                                   FontSize="12"
+                                   TextColor="#AAAAAA"/>
+                        </VerticalStackLayout>
+                        <Switch x:Name="SwitchRanking"
+                                Grid.Column="2"
+                                VerticalOptions="Center"
+                                OnColor="#4285F4"
+                                ThumbColor="White"/>
+                    </Grid>
+                </Frame>
+
+                <!-- Boton guardar -->
+                <Frame x:Name="GuardarButton"
+                       BackgroundColor="#4285F4"
+                       BorderColor="Transparent"
+                       CornerRadius="14"
+                       Padding="0"
+                       HeightRequest="56"
+                       HasShadow="True"
+                       Margin="0,24,0,0">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnGuardarTapped"/>
+                    </Frame.GestureRecognizers>
+                    <Label Text="Guardar cambios"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"/>
+                </Frame>
+
+                <!-- Mensaje de feedback -->
+                <Label x:Name="FeedbackLabel"
+                       Text=""
+                       FontSize="13"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center"
+                       IsVisible="False"
+                       Margin="0,12,0,0"/>
+
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

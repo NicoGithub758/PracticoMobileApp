@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="PracticoMobileApp.LoginPage"
+             x:Class="PracticoMobileApp.AuthOptionsPage"
              Shell.NavBarIsVisible="False"
              BackgroundColor="#0F0F0F">
 
     <Grid>
-        <BoxView Color="#0F0F0F" />
-
         <VerticalStackLayout VerticalOptions="Center"
-                             HorizontalOptions="Center"
+                             HorizontalOptions="Fill"
                              Padding="40"
                              Spacing="0">
 
@@ -34,15 +32,72 @@
                    HorizontalOptions="Center"
                    Margin="0,0,0,8"/>
 
-            <!-- Nombre del sitio elegido -->
             <Label x:Name="SitioLabel"
                    Text=""
                    FontSize="14"
                    TextColor="#4285F4"
                    HorizontalOptions="Center"
-                   Margin="0,0,0,40"/>
+                   Margin="0,0,0,8"/>
 
-            <!-- Botón Google -->
+            <!-- Aviso opcional (ej: 'Tu solicitud requerirá aprobación') -->
+            <Label x:Name="AvisoLabel"
+                   Text=""
+                   FontSize="12"
+                   TextColor="#FFC107"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   IsVisible="False"
+                   Margin="20,0,20,30"/>
+
+            <!-- Boton Login interno -->
+            <Frame x:Name="LoginInternoButton"
+                   BackgroundColor="#4285F4"
+                   BorderColor="Transparent"
+                   CornerRadius="14"
+                   Padding="0"
+                   HeightRequest="56"
+                   HasShadow="True"
+                   Margin="0,20,0,12">
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnLoginInternoTapped"/>
+                </Frame.GestureRecognizers>
+                <Label Text="Iniciar sesión"
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"/>
+            </Frame>
+
+            <!-- Boton Registrarse -->
+            <Frame x:Name="RegistrarseButton"
+                   BackgroundColor="#1A1A2E"
+                   BorderColor="#4285F4"
+                   CornerRadius="14"
+                   Padding="0"
+                   HeightRequest="56"
+                   HasShadow="False"
+                   Margin="0,0,0,12">
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnRegistrarseTapped"/>
+                </Frame.GestureRecognizers>
+                <Label Text="Crear cuenta"
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       TextColor="#4285F4"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"/>
+            </Frame>
+
+            <!-- Separador OR -->
+            <Label x:Name="OrLabel"
+                   Text="— ó —"
+                   FontSize="12"
+                   TextColor="#666666"
+                   HorizontalOptions="Center"
+                   Margin="0,8,0,8"/>
+
+            <!-- Boton Google -->
             <Frame x:Name="GoogleButton"
                    BackgroundColor="White"
                    BorderColor="Transparent"
@@ -80,6 +135,7 @@
                    TextColor="#FF6B6B"
                    FontSize="13"
                    HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
                    IsVisible="False"
                    Margin="0,16,0,0"/>
 
@@ -88,7 +144,7 @@
         <!-- Volver a sitios -->
         <Label Text="← Cambiar sitio"
                FontSize="13"
-               TextColor="#555555"
+               TextColor="#888888"
                HorizontalOptions="Center"
                VerticalOptions="End"
                Margin="0,0,0,30">
