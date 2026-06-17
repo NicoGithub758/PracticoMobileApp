@@ -62,16 +62,14 @@ public partial class DetallePencaPage : ContentPage
 
     private async void OnHacerPrediccionesClicked(object sender, EventArgs e)
     {
-        await DisplayAlert("Próximamente", "La función de predicciones está en desarrollo", "OK");
+        // Validar que tenga ParticipacionId
+        if (_penca.ParticipacionId == null || _penca.ParticipacionId == 0)
+        {
+            await DisplayAlert("Error", "No se encontró tu participación", "OK");
+            return;
+        }
 
-        // TODO: descomentar cuando PrediccionesPage esté creada
-        // if (_penca.ParticipacionId == null)
-        // {
-        //     await DisplayAlert("Error", "No se encontro tu participacion", "OK");
-        //     return;
-        // }
-        // await Navigation.PushAsync(new PrediccionesPage(
-        //     _penca.ParticipacionId.Value,
-        //     _penca.PencaId));
+        // Navegar a la pagina de predicciones
+        await Navigation.PushAsync(new PrediccionesPage(_penca.ParticipacionId.Value));
     }
 }

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PracticoMobileApp.PrediccionesPage"
+             Title="Predicciones"
+             BackgroundColor="#0F0F0F">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Header -->
+        <VerticalStackLayout Grid.Row="0" Padding="20,20,20,8">
+            <Label Text="Hacer Predicciones"
+                   FontSize="22"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   Margin="0,0,0,4"/>
+            <Label Text="Ingresá tu predicción para cada partido pendiente"
+                   FontSize="13"
+                   TextColor="#AAAAAA"/>
+        </VerticalStackLayout>
+
+        <!-- Lista de partidos -->
+        <RefreshView Grid.Row="1"
+                     x:Name="RefreshPartidos"
+                     Refreshing="OnRefreshing">
+            <CollectionView x:Name="PartidosCollection"
+                            SelectionMode="None"
+                            Margin="20,0,20,20">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame BackgroundColor="#1A1A2E"
+                               BorderColor="#333333"
+                               CornerRadius="12"
+                               Padding="16"
+                               HasShadow="False"
+                               Margin="0,6">
+
+                            <VerticalStackLayout Spacing="12">
+
+                                <!-- Fecha -->
+                                <Label Text="{Binding FechaTexto}"
+                                       FontSize="12"
+                                       TextColor="#AAAAAA"/>
+
+                                <!-- Equipos + Entry de goles -->
+                                <Grid ColumnDefinitions="*,60,Auto,60,*"
+                                      ColumnSpacing="8"
+                                      VerticalOptions="Center">
+
+                                    <Label Grid.Column="0"
+                                           Text="{Binding Local.Nombre}"
+                                           FontSize="15"
+                                           FontAttributes="Bold"
+                                           TextColor="White"
+                                           HorizontalTextAlignment="End"
+                                           VerticalOptions="Center"/>
+
+                                    <Frame Grid.Column="1"
+                                           BackgroundColor="#0F0F0F"
+                                           BorderColor="#4285F4"
+                                           CornerRadius="8"
+                                           Padding="0"
+                                           HeightRequest="44"
+                                           HasShadow="False">
+                                        <Entry Text="{Binding GolesLocalInput}"
+                                               Placeholder="0"
+                                               PlaceholderColor="#666666"
+                                               TextColor="White"
+                                               Keyboard="Numeric"
+                                               MaxLength="2"
+                                               HorizontalTextAlignment="Center"
+                                               FontSize="18"
+                                               BackgroundColor="Transparent"/>
+                                    </Frame>
+
+                                    <Label Grid.Column="2"
+                                           Text="-"
+                                           FontSize="18"
+                                           FontAttributes="Bold"
+                                           TextColor="#AAAAAA"
+                                           VerticalOptions="Center"
+                                           HorizontalOptions="Center"/>
+
+                                    <Frame Grid.Column="3"
+                                           BackgroundColor="#0F0F0F"
+                                           BorderColor="#4285F4"
+                                           CornerRadius="8"
+                                           Padding="0"
+                                           HeightRequest="44"
+                                           HasShadow="False">
+                                        <Entry Text="{Binding GolesVisitanteInput}"
+                                               Placeholder="0"
+                                               PlaceholderColor="#666666"
+                                               TextColor="White"
+                                               Keyboard="Numeric"
+                                               MaxLength="2"
+                                               HorizontalTextAlignment="Center"
+                                               FontSize="18"
+                                               BackgroundColor="Transparent"/>
+                                    </Frame>
+
+                                    <Label Grid.Column="4"
+                                           Text="{Binding Visitante.Nombre}"
+                                           FontSize="15"
+                                           FontAttributes="Bold"
+                                           TextColor="White"
+                                           HorizontalTextAlignment="Start"
+                                           VerticalOptions="Center"/>
+                                </Grid>
+
+                                <!-- Estado -->
+                                <Label Text="{Binding EstadoPrediccion}"
+                                       TextColor="{Binding EstadoColor}"
+                                       FontSize="12"
+                                       FontAttributes="Italic"
+                                       HorizontalOptions="Center"/>
+
+                                <!-- Boton guardar -->
+                                <Frame BackgroundColor="#4285F4"
+                                       BorderColor="Transparent"
+                                       CornerRadius="10"
+                                       Padding="0"
+                                       HeightRequest="42"
+                                       HasShadow="False">
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnGuardarTapped"
+                                                              CommandParameter="{Binding .}"/>
+                                    </Frame.GestureRecognizers>
+                                    <Label Text="Guardar predicción"
+                                           FontSize="14"
+                                           FontAttributes="Bold"
+                                           TextColor="White"
+                                           VerticalOptions="Center"
+                                           HorizontalOptions="Center"/>
+                                </Frame>
+
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout Padding="40" VerticalOptions="Center">
+                        <Label Text="No hay partidos pendientes para predecir"
+                               FontSize="14"
+                               TextColor="#888888"
+                               HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+
+            </CollectionView>
+        </RefreshView>
+
+        <!-- Loading inicial -->
+        <ActivityIndicator Grid.Row="1"
+                          x:Name="LoadingIndicator"
+                          IsRunning="False"
+                          IsVisible="False"
+                          Color="#4285F4"
+                          VerticalOptions="Center"
+                          HorizontalOptions="Center"/>
+    </Grid>
+
+</ContentPage>

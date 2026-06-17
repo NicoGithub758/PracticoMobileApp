@@ -9,8 +9,8 @@ namespace PracticoMobileApp.Services
         private readonly HttpClient _httpClient;
 
         // En emulador Android: 10.0.2.2 apunta a localhost de la PC
-        //private const string BaseUrl = "https://10.0.2.2:7230";
-        private const string BaseUrl = "https://sincere-delight-production-006f.up.railway.app";
+        private const string BaseUrl = "https://10.0.2.2:7230";
+        //private const string BaseUrl = "https://sincere-delight-production-006f.up.railway.app";
 
         public ApiService()
         {
@@ -339,6 +339,85 @@ namespace PracticoMobileApp.Services
             {
                 System.Diagnostics.Debug.WriteLine($"[Preferencias] Error al guardar: {ex.Message}");
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Obtiene los partidos de una penca con la prediccion del usuario (si tiene).
+        /// Llama al endpoint del compañero. Devuelve TODOS los partidos (jugados y no jugados).
+        /// El llamador filtra segun necesite.
+        /// </summary>
+        public async Task<List<PartidoConPrediccionMobile>> ObtenerPartidosYPrediccionesAsync(int participacionId)
+        {
+            try
+            {
+                if (!await AgregarTokenAsync())
+                    return new List<PartidoConPrediccionMobile>();
+
+                var response = await _httpClient.GetAsync($"/api/predicciones/partidos?idParticipacion={participacionId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    var partidos = JsonSerializer.Deserialize<List<PartidoConPrediccionMobile>>(json, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+                    return partidos ?? new List<PartidoConPrediccionMobile>();
+                }
+
+                System.Diagnostics.Debug.WriteLine($"[Predicciones] Error GET: {response.StatusCode}");
+                return new List<PartidoConPrediccionMobile>();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[Predicciones] Excepcion GET: {ex.Message}");
+                return new List<PartidoConPrediccionMobile>();
+            }
+        }
+
+        /// <summary>
+        /// Crea o actualiza una prediccion. El endpoint hace upsert.
+        /// - Si prediccionId == 0: crea nueva
+        /// - Si prediccionId > 0: actualiza la existente
+        /// El API devuelve solo 200 OK sin body, asi que devolvemos (true, null) en exito.
+        /// </summary>
+        public async Task<(bool exito, string? error)> CrearOActualizarPrediccionAsync(
+            int prediccionId,  // 0 si es nueva, > 0 si es modificacion
+            int participacionId,
+            int partidoId,
+            int golesLocal,
+            int golesVisitante)
+        {
+            try
+            {
+                if (!await AgregarTokenAsync())
+                    return (false, "No hay sesion activa.");
+
+                var body = new CrearPrediccionApiRequest
+                {
+                    Id = prediccionId,
+                    ParticipacionId = participacionId,
+                    PartidoId = partidoId,
+                    GolesEquipoLocal = golesLocal,
+                    GolesEquipoVisitante = golesVisitante
+                };
+
+                var response = await _httpClient.PostAsJsonAsync("/api/predicciones/create", body);
+
+                if (response.IsSuccessStatusCode)
+                    return (true, null);
+
+                // El endpoint devuelve BadRequest con un string simple, no un objeto.
+                var errorContent = await response.Content.ReadAsStringAsync();
+                // Limpiar comillas si vienen
+                errorContent = errorContent.Trim('"');
+                return (false, string.IsNullOrEmpty(errorContent) ? $"Error {(int)response.StatusCode}" : errorContent);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[Predicciones] Excepcion POST: {ex.Message}");
+                return (false, "No se pudo conectar con el servidor.");
             }
         }
 
