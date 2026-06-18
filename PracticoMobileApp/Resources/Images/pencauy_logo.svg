@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" width="400" height="200">
+  
+  <!-- Fondo circular suave detrás del logo -->
+  <circle cx="200" cy="100" r="80" fill="#EAF5FB" opacity="0.7"/>
+  
+  <!-- Texto principal "Penca" -->
+  <text x="200" y="115" 
+        font-family="Georgia, 'Times New Roman', serif" 
+        font-size="62" 
+        font-weight="bold" 
+        text-anchor="middle"
+        fill="#1B3A4B"
+        letter-spacing="-1">Penca</text>
+  
+  <!-- "UY" destacado en celeste, con fondo circular -->
+  <g transform="translate(335, 80)">
+    <circle cx="0" cy="20" r="32" fill="#5DADE2"/>
+    <text x="0" y="32" 
+          font-family="Arial Black, Arial, sans-serif" 
+          font-size="32" 
+          font-weight="900" 
+          text-anchor="middle"
+          fill="#FFFFFF"
+          letter-spacing="-1">UY</text>
+  </g>
+
+  <!-- Subtítulo -->
+  <text x="200" y="150" 
+        font-family="Arial, sans-serif" 
+        font-size="14" 
+        font-weight="normal" 
+        text-anchor="middle"
+        fill="#7895A3"
+        letter-spacing="3">PREDICCIONES DEPORTIVAS</text>
+
+  <!-- Línea decorativa con celeste -->
+  <line x1="120" y1="165" x2="280" y2="165" stroke="#5DADE2" stroke-width="2" opacity="0.4"/>
+
+</svg>

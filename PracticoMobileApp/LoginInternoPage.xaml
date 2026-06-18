@@ -2,8 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PracticoMobileApp.LoginInternoPage"
-             Shell.NavBarIsVisible="False"
-             BackgroundColor="#0F0F0F">
+             Shell.NavBarIsVisible="False">
 
     <ScrollView>
         <VerticalStackLayout VerticalOptions="Center"
@@ -12,40 +11,35 @@
                              Spacing="0">
 
             <!-- Logo -->
-            <Frame WidthRequest="80"
-                   HeightRequest="80"
-                   CornerRadius="20"
-                   BackgroundColor="#1A1A2E"
-                   BorderColor="#4285F4"
+            <Image Source="pencauy_logo.svg"
+                   HeightRequest="150"
+                   Aspect="AspectFit"
                    HorizontalOptions="Center"
-                   Margin="0,0,0,24">
-                <Label Text="🏆"
-                       FontSize="40"
-                       HorizontalOptions="Center"
-                       VerticalOptions="Center"/>
-            </Frame>
+                   Margin="0,0,0,16"/>
 
             <Label Text="Iniciar sesión"
                    FontSize="26"
                    FontAttributes="Bold"
-                   TextColor="White"
+                   TextColor="{StaticResource TextoPrincipal}"
                    HorizontalOptions="Center"
                    Margin="0,0,0,4"/>
 
             <Label x:Name="SitioLabel"
                    Text=""
                    FontSize="13"
-                   TextColor="#4285F4"
+                   TextColor="{StaticResource VerdePrimary}"
+                   FontAttributes="Bold"
                    HorizontalOptions="Center"
                    Margin="0,0,0,32"/>
 
             <!-- Email -->
             <Label Text="Email"
                    FontSize="13"
-                   TextColor="#AAAAAA"
+                   TextColor="{StaticResource TextoSecundario}"
+                   FontAttributes="Bold"
                    Margin="0,0,0,4"/>
-            <Frame BackgroundColor="#1A1A2E"
-                   BorderColor="#333333"
+            <Frame BackgroundColor="{StaticResource BackgroundCard}"
+                   BorderColor="{StaticResource VerdeLight}"
                    CornerRadius="10"
                    Padding="14,0"
                    HeightRequest="50"
@@ -53,8 +47,8 @@
                    Margin="0,0,0,16">
                 <Entry x:Name="EmailEntry"
                        Placeholder="tu@email.com"
-                       PlaceholderColor="#666666"
-                       TextColor="White"
+                       PlaceholderColor="{StaticResource TextoSecundario}"
+                       TextColor="{StaticResource TextoPrincipal}"
                        Keyboard="Email"
                        BackgroundColor="Transparent"/>
             </Frame>
@@ -62,10 +56,11 @@
             <!-- Password -->
             <Label Text="Contraseña"
                    FontSize="13"
-                   TextColor="#AAAAAA"
+                   TextColor="{StaticResource TextoSecundario}"
+                   FontAttributes="Bold"
                    Margin="0,0,0,4"/>
-            <Frame BackgroundColor="#1A1A2E"
-                   BorderColor="#333333"
+            <Frame BackgroundColor="{StaticResource BackgroundCard}"
+                   BorderColor="{StaticResource VerdeLight}"
                    CornerRadius="10"
                    Padding="14,0"
                    HeightRequest="50"
@@ -73,15 +68,15 @@
                    Margin="0,0,0,24">
                 <Entry x:Name="PasswordEntry"
                        Placeholder="Tu contraseña"
-                       PlaceholderColor="#666666"
-                       TextColor="White"
+                       PlaceholderColor="{StaticResource TextoSecundario}"
+                       TextColor="{StaticResource TextoPrincipal}"
                        IsPassword="True"
                        BackgroundColor="Transparent"/>
             </Frame>
 
             <!-- Boton de login -->
             <Frame x:Name="LoginButton"
-                   BackgroundColor="#4285F4"
+                   BackgroundColor="{StaticResource VerdePrimary}"
                    BorderColor="Transparent"
                    CornerRadius="14"
                    Padding="0"
@@ -101,12 +96,12 @@
             <ActivityIndicator x:Name="LoadingIndicator"
                                IsRunning="False"
                                IsVisible="False"
-                               Color="#4285F4"
+                               Color="{StaticResource VerdePrimary}"
                                Margin="0,20,0,0"/>
 
             <Label x:Name="ErrorLabel"
                    Text=""
-                   TextColor="#FF6B6B"
+                   TextColor="{StaticResource ColorError}"
                    FontSize="13"
                    HorizontalOptions="Center"
                    HorizontalTextAlignment="Center"
@@ -116,7 +111,7 @@
             <!-- Volver -->
             <Label Text="← Volver"
                    FontSize="13"
-                   TextColor="#888888"
+                   TextColor="{StaticResource TextoSecundario}"
                    HorizontalOptions="Center"
                    Margin="0,32,0,0">
                 <Label.GestureRecognizers>

@@ -2,8 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PracticoMobileApp.AuthOptionsPage"
-             Shell.NavBarIsVisible="False"
-             BackgroundColor="#0F0F0F">
+             Shell.NavBarIsVisible="False">
 
     <Grid>
         <VerticalStackLayout VerticalOptions="Center"
@@ -12,30 +11,17 @@
                              Spacing="0">
 
             <!-- Logo -->
-            <Frame WidthRequest="90"
-                   HeightRequest="90"
-                   CornerRadius="22"
-                   BackgroundColor="#1A1A2E"
-                   BorderColor="#4285F4"
+            <Image Source="pencauy_logo.svg"
+                   HeightRequest="160"
+                   Aspect="AspectFit"
                    HorizontalOptions="Center"
-                   Margin="0,0,0,30">
-                <Label Text="🏆"
-                       FontSize="44"
-                       HorizontalOptions="Center"
-                       VerticalOptions="Center"/>
-            </Frame>
-
-            <Label Text="tupenca.uy"
-                   FontSize="32"
-                   FontAttributes="Bold"
-                   TextColor="White"
-                   HorizontalOptions="Center"
-                   Margin="0,0,0,8"/>
+                   Margin="0,0,0,16"/>
 
             <Label x:Name="SitioLabel"
                    Text=""
                    FontSize="14"
-                   TextColor="#4285F4"
+                   TextColor="{StaticResource VerdePrimary}"
+                   FontAttributes="Bold"
                    HorizontalOptions="Center"
                    Margin="0,0,0,8"/>
 
@@ -43,7 +29,7 @@
             <Label x:Name="AvisoLabel"
                    Text=""
                    FontSize="12"
-                   TextColor="#FFC107"
+                   TextColor="{StaticResource ColorAdvertencia}"
                    HorizontalOptions="Center"
                    HorizontalTextAlignment="Center"
                    IsVisible="False"
@@ -51,7 +37,7 @@
 
             <!-- Boton Login interno -->
             <Frame x:Name="LoginInternoButton"
-                   BackgroundColor="#4285F4"
+                   BackgroundColor="{StaticResource VerdePrimary}"
                    BorderColor="Transparent"
                    CornerRadius="14"
                    Padding="0"
@@ -71,8 +57,8 @@
 
             <!-- Boton Registrarse -->
             <Frame x:Name="RegistrarseButton"
-                   BackgroundColor="#1A1A2E"
-                   BorderColor="#4285F4"
+                   BackgroundColor="{StaticResource BackgroundCard}"
+                   BorderColor="{StaticResource VerdePrimary}"
                    CornerRadius="14"
                    Padding="0"
                    HeightRequest="56"
@@ -84,7 +70,7 @@
                 <Label Text="Crear cuenta"
                        FontSize="16"
                        FontAttributes="Bold"
-                       TextColor="#4285F4"
+                       TextColor="{StaticResource VerdePrimary}"
                        VerticalOptions="Center"
                        HorizontalOptions="Center"/>
             </Frame>
@@ -93,14 +79,14 @@
             <Label x:Name="OrLabel"
                    Text="— ó —"
                    FontSize="12"
-                   TextColor="#666666"
+                   TextColor="{StaticResource TextoSecundario}"
                    HorizontalOptions="Center"
                    Margin="0,8,0,8"/>
 
             <!-- Boton Google -->
             <Frame x:Name="GoogleButton"
                    BackgroundColor="White"
-                   BorderColor="Transparent"
+                   BorderColor="{StaticResource BordeMedio}"
                    CornerRadius="14"
                    Padding="0"
                    HeightRequest="56"
@@ -119,7 +105,7 @@
                            Text="Continuar con Google"
                            FontSize="16"
                            FontAttributes="Bold"
-                           TextColor="#333333"
+                           TextColor="{StaticResource TextoPrincipal}"
                            VerticalOptions="Center"/>
                 </Grid>
             </Frame>
@@ -127,12 +113,12 @@
             <ActivityIndicator x:Name="LoadingIndicator"
                                IsRunning="False"
                                IsVisible="False"
-                               Color="#4285F4"
+                               Color="{StaticResource VerdePrimary}"
                                Margin="0,20,0,0"/>
 
             <Label x:Name="ErrorLabel"
                    Text=""
-                   TextColor="#FF6B6B"
+                   TextColor="{StaticResource ColorError}"
                    FontSize="13"
                    HorizontalOptions="Center"
                    HorizontalTextAlignment="Center"
@@ -144,7 +130,7 @@
         <!-- Volver a sitios -->
         <Label Text="← Cambiar sitio"
                FontSize="13"
-               TextColor="#888888"
+               TextColor="{StaticResource TextoSecundario}"
                HorizontalOptions="Center"
                VerticalOptions="End"
                Margin="0,0,0,30">

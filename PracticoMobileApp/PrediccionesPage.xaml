@@ -2,8 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PracticoMobileApp.PrediccionesPage"
-             Title="Predicciones"
-             BackgroundColor="#0F0F0F">
+             Title="Predicciones">
 
     <Grid RowDefinitions="Auto,*">
 
@@ -12,11 +11,11 @@
             <Label Text="Hacer Predicciones"
                    FontSize="22"
                    FontAttributes="Bold"
-                   TextColor="White"
+                   TextColor="{StaticResource TextoPrincipal}"
                    Margin="0,0,0,4"/>
             <Label Text="Ingresá tu predicción para cada partido pendiente"
                    FontSize="13"
-                   TextColor="#AAAAAA"/>
+                   TextColor="{StaticResource TextoSecundario}"/>
         </VerticalStackLayout>
 
         <!-- Lista de partidos -->
@@ -29,8 +28,8 @@
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Frame BackgroundColor="#1A1A2E"
-                               BorderColor="#333333"
+                        <Frame BackgroundColor="{StaticResource BackgroundCard}"
+                               BorderColor="{StaticResource VerdeLight}"
                                CornerRadius="12"
                                Padding="16"
                                HasShadow="False"
@@ -41,7 +40,8 @@
                                 <!-- Fecha -->
                                 <Label Text="{Binding FechaTexto}"
                                        FontSize="12"
-                                       TextColor="#AAAAAA"/>
+                                       TextColor="{StaticResource TextoSecundario}"
+                                       FontAttributes="Bold"/>
 
                                 <!-- Equipos + Entry de goles -->
                                 <Grid ColumnDefinitions="*,60,Auto,60,*"
@@ -52,25 +52,26 @@
                                            Text="{Binding Local.Nombre}"
                                            FontSize="15"
                                            FontAttributes="Bold"
-                                           TextColor="White"
+                                           TextColor="{StaticResource TextoPrincipal}"
                                            HorizontalTextAlignment="End"
                                            VerticalOptions="Center"/>
 
                                     <Frame Grid.Column="1"
-                                           BackgroundColor="#0F0F0F"
-                                           BorderColor="#4285F4"
+                                           BackgroundColor="{StaticResource BackgroundSecondary}"
+                                           BorderColor="{StaticResource VerdePrimary}"
                                            CornerRadius="8"
                                            Padding="0"
                                            HeightRequest="44"
                                            HasShadow="False">
                                         <Entry Text="{Binding GolesLocalInput}"
                                                Placeholder="0"
-                                               PlaceholderColor="#666666"
-                                               TextColor="White"
+                                               PlaceholderColor="{StaticResource TextoSecundario}"
+                                               TextColor="{StaticResource TextoPrincipal}"
                                                Keyboard="Numeric"
                                                MaxLength="2"
                                                HorizontalTextAlignment="Center"
                                                FontSize="18"
+                                               FontAttributes="Bold"
                                                BackgroundColor="Transparent"/>
                                     </Frame>
 
@@ -78,25 +79,26 @@
                                            Text="-"
                                            FontSize="18"
                                            FontAttributes="Bold"
-                                           TextColor="#AAAAAA"
+                                           TextColor="{StaticResource TextoSecundario}"
                                            VerticalOptions="Center"
                                            HorizontalOptions="Center"/>
 
                                     <Frame Grid.Column="3"
-                                           BackgroundColor="#0F0F0F"
-                                           BorderColor="#4285F4"
+                                           BackgroundColor="{StaticResource BackgroundSecondary}"
+                                           BorderColor="{StaticResource VerdePrimary}"
                                            CornerRadius="8"
                                            Padding="0"
                                            HeightRequest="44"
                                            HasShadow="False">
                                         <Entry Text="{Binding GolesVisitanteInput}"
                                                Placeholder="0"
-                                               PlaceholderColor="#666666"
-                                               TextColor="White"
+                                               PlaceholderColor="{StaticResource TextoSecundario}"
+                                               TextColor="{StaticResource TextoPrincipal}"
                                                Keyboard="Numeric"
                                                MaxLength="2"
                                                HorizontalTextAlignment="Center"
                                                FontSize="18"
+                                               FontAttributes="Bold"
                                                BackgroundColor="Transparent"/>
                                     </Frame>
 
@@ -104,7 +106,7 @@
                                            Text="{Binding Visitante.Nombre}"
                                            FontSize="15"
                                            FontAttributes="Bold"
-                                           TextColor="White"
+                                           TextColor="{StaticResource TextoPrincipal}"
                                            HorizontalTextAlignment="Start"
                                            VerticalOptions="Center"/>
                                 </Grid>
@@ -117,7 +119,7 @@
                                        HorizontalOptions="Center"/>
 
                                 <!-- Boton guardar -->
-                                <Frame BackgroundColor="#4285F4"
+                                <Frame BackgroundColor="{StaticResource VerdePrimary}"
                                        BorderColor="Transparent"
                                        CornerRadius="10"
                                        Padding="0"
@@ -144,7 +146,7 @@
                     <VerticalStackLayout Padding="40" VerticalOptions="Center">
                         <Label Text="No hay partidos pendientes para predecir"
                                FontSize="14"
-                               TextColor="#888888"
+                               TextColor="{StaticResource TextoSecundario}"
                                HorizontalTextAlignment="Center"/>
                     </VerticalStackLayout>
                 </CollectionView.EmptyView>
@@ -157,7 +159,7 @@
                           x:Name="LoadingIndicator"
                           IsRunning="False"
                           IsVisible="False"
-                          Color="#4285F4"
+                          Color="{StaticResource VerdePrimary}"
                           VerticalOptions="Center"
                           HorizontalOptions="Center"/>
     </Grid>

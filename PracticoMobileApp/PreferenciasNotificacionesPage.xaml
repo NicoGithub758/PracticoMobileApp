@@ -2,8 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PracticoMobileApp.PreferenciasNotificacionesPage"
-             Title="Notificaciones"
-             BackgroundColor="#0F0F0F">
+             Title="Notificaciones">
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="0">
@@ -12,19 +11,19 @@
             <Label Text="Notificaciones"
                    FontSize="24"
                    FontAttributes="Bold"
-                   TextColor="White"
+                   TextColor="{StaticResource TextoPrincipal}"
                    Margin="0,16,0,4"/>
 
             <Label Text="Elegí qué notificaciones querés recibir en este dispositivo."
                    FontSize="13"
-                   TextColor="#AAAAAA"
+                   TextColor="{StaticResource TextoSecundario}"
                    Margin="0,0,0,24"/>
 
             <!-- Indicador de carga inicial -->
             <ActivityIndicator x:Name="LoadingIndicator"
                                IsRunning="True"
                                IsVisible="True"
-                               Color="#4285F4"
+                               Color="{StaticResource VerdePrimary}"
                                Margin="0,40,0,0"/>
 
             <!-- Contenedor de switches (oculto hasta que cargue) -->
@@ -33,8 +32,8 @@
                                  Spacing="12">
 
                 <!-- Resultados -->
-                <Frame BackgroundColor="#1A1A2E"
-                       BorderColor="#333333"
+                <Frame BackgroundColor="{StaticResource BackgroundCard}"
+                       BorderColor="{StaticResource VerdeLight}"
                        CornerRadius="12"
                        Padding="16"
                        HasShadow="False">
@@ -47,22 +46,22 @@
                             <Label Text="Resultados"
                                    FontSize="15"
                                    FontAttributes="Bold"
-                                   TextColor="White"/>
+                                   TextColor="{StaticResource TextoPrincipal}"/>
                             <Label Text="Cuando se confirma el resultado de un partido"
                                    FontSize="12"
-                                   TextColor="#AAAAAA"/>
+                                   TextColor="{StaticResource TextoSecundario}"/>
                         </VerticalStackLayout>
                         <Switch x:Name="SwitchResultados"
                                 Grid.Column="2"
                                 VerticalOptions="Center"
-                                OnColor="#4285F4"
+                                OnColor="{StaticResource VerdePrimary}"
                                 ThumbColor="White"/>
                     </Grid>
                 </Frame>
 
                 <!-- Partidos -->
-                <Frame BackgroundColor="#1A1A2E"
-                       BorderColor="#333333"
+                <Frame BackgroundColor="{StaticResource BackgroundCard}"
+                       BorderColor="{StaticResource VerdeLight}"
                        CornerRadius="12"
                        Padding="16"
                        HasShadow="False">
@@ -75,22 +74,22 @@
                             <Label Text="Partidos"
                                    FontSize="15"
                                    FontAttributes="Bold"
-                                   TextColor="White"/>
+                                   TextColor="{StaticResource TextoPrincipal}"/>
                             <Label Text="Recordatorios antes de que cierre un partido"
                                    FontSize="12"
-                                   TextColor="#AAAAAA"/>
+                                   TextColor="{StaticResource TextoSecundario}"/>
                         </VerticalStackLayout>
                         <Switch x:Name="SwitchPartidos"
                                 Grid.Column="2"
                                 VerticalOptions="Center"
-                                OnColor="#4285F4"
+                                OnColor="{StaticResource VerdePrimary}"
                                 ThumbColor="White"/>
                     </Grid>
                 </Frame>
 
                 <!-- Generales -->
-                <Frame BackgroundColor="#1A1A2E"
-                       BorderColor="#333333"
+                <Frame BackgroundColor="{StaticResource BackgroundCard}"
+                       BorderColor="{StaticResource VerdeLight}"
                        CornerRadius="12"
                        Padding="16"
                        HasShadow="False">
@@ -103,22 +102,22 @@
                             <Label Text="Anuncios generales"
                                    FontSize="15"
                                    FontAttributes="Bold"
-                                   TextColor="White"/>
+                                   TextColor="{StaticResource TextoPrincipal}"/>
                             <Label Text="Mensajes y novedades del administrador del sitio"
                                    FontSize="12"
-                                   TextColor="#AAAAAA"/>
+                                   TextColor="{StaticResource TextoSecundario}"/>
                         </VerticalStackLayout>
                         <Switch x:Name="SwitchGenerales"
                                 Grid.Column="2"
                                 VerticalOptions="Center"
-                                OnColor="#4285F4"
+                                OnColor="{StaticResource VerdePrimary}"
                                 ThumbColor="White"/>
                     </Grid>
                 </Frame>
 
                 <!-- Ranking -->
-                <Frame BackgroundColor="#1A1A2E"
-                       BorderColor="#333333"
+                <Frame BackgroundColor="{StaticResource BackgroundCard}"
+                       BorderColor="{StaticResource VerdeLight}"
                        CornerRadius="12"
                        Padding="16"
                        HasShadow="False">
@@ -131,22 +130,22 @@
                             <Label Text="Ranking"
                                    FontSize="15"
                                    FontAttributes="Bold"
-                                   TextColor="White"/>
+                                   TextColor="{StaticResource TextoPrincipal}"/>
                             <Label Text="Cuando cambia tu posición en la tabla"
                                    FontSize="12"
-                                   TextColor="#AAAAAA"/>
+                                   TextColor="{StaticResource TextoSecundario}"/>
                         </VerticalStackLayout>
                         <Switch x:Name="SwitchRanking"
                                 Grid.Column="2"
                                 VerticalOptions="Center"
-                                OnColor="#4285F4"
+                                OnColor="{StaticResource VerdePrimary}"
                                 ThumbColor="White"/>
                     </Grid>
                 </Frame>
 
                 <!-- Boton guardar -->
                 <Frame x:Name="GuardarButton"
-                       BackgroundColor="#4285F4"
+                       BackgroundColor="{StaticResource VerdePrimary}"
                        BorderColor="Transparent"
                        CornerRadius="14"
                        Padding="0"

@@ -18,6 +18,8 @@
 
 	<ItemGroup>
 	  <None Remove="Platforms\Android\google-services.json" />
+	  <None Remove="Resources\Images\pencauy_icon.svg" />
+	  <None Remove="Resources\Images\pencauy_logo.svg" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -35,6 +37,12 @@
 
 	<ItemGroup>
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+		<MauiSplashScreen Include="Resources\Splash\pencauy_splash.svg" Color="#F7FAFC" BaseSize="200,200" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiImage Include="Resources\Images\pencauy_icon.svg" />
+	  <MauiImage Include="Resources\Images\pencauy_logo.svg" />
 	</ItemGroup>
 
 	<ItemGroup>

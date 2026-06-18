@@ -9,8 +9,8 @@ namespace PracticoMobileApp.Services
         private readonly HttpClient _httpClient;
 
         // En emulador Android: 10.0.2.2 apunta a localhost de la PC
-        private const string BaseUrl = "https://10.0.2.2:7230";
-        //private const string BaseUrl = "https://sincere-delight-production-006f.up.railway.app";
+        //private const string BaseUrl = "https://10.0.2.2:7230";
+        private const string BaseUrl = "https://sincere-delight-production-006f.up.railway.app";
 
         public ApiService()
         {

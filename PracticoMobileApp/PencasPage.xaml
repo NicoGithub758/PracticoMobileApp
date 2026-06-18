@@ -11,6 +11,7 @@
                Text="Pencas del Sitio"
                FontSize="24"
                FontAttributes="Bold"
+               TextColor="{StaticResource TextoPrincipal}"
                HorizontalOptions="Center"
                Margin="0,10,0,10"/>
 
@@ -22,7 +23,7 @@
             <Button x:Name="BtnTodas"
                     Text="Todas"
                     Clicked="OnFiltroTodasClicked"
-                    BackgroundColor="#2196F3"
+                    BackgroundColor="{StaticResource VerdePrimary}"
                     TextColor="White"
                     CornerRadius="20"
                     HeightRequest="40"
@@ -30,8 +31,8 @@
             <Button x:Name="BtnMisPencas"
                     Text="Mis Pencas"
                     Clicked="OnFiltroMisPencasClicked"
-                    BackgroundColor="#E0E0E0"
-                    TextColor="Black"
+                    BackgroundColor="{StaticResource VerdeLight}"
+                    TextColor="{StaticResource TextoPrincipal}"
                     CornerRadius="20"
                     HeightRequest="40"
                     Padding="20,0"/>
@@ -46,8 +47,9 @@
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Border Stroke="#DDDDDD"
+                        <Border Stroke="{StaticResource VerdeLight}"
                                 StrokeThickness="1"
+                                BackgroundColor="{StaticResource BackgroundCard}"
                                 Padding="15"
                                 Margin="0,5">
                             <Border.StrokeShape>
@@ -62,6 +64,7 @@
                                            Text="{Binding NombrePenca}"
                                            FontSize="18"
                                            FontAttributes="Bold"
+                                           TextColor="{StaticResource TextoPrincipal}"
                                            VerticalOptions="Center"/>
 
                                     <Border Grid.Column="1"
@@ -81,13 +84,13 @@
                                 <HorizontalStackLayout Grid.Row="1" Spacing="15">
                                     <Label Text="{Binding Deporte}"
                                            FontSize="14"
-                                           TextColor="Gray"/>
+                                           TextColor="{StaticResource TextoSecundario}"/>
                                     <Label Text="{Binding CantidadEquipos, StringFormat='{0} equipos'}"
                                            FontSize="14"
-                                           TextColor="Gray"/>
+                                           TextColor="{StaticResource TextoSecundario}"/>
                                     <Label Text="{Binding CostoTexto}"
                                            FontSize="14"
-                                           TextColor="Gray"
+                                           TextColor="{StaticResource VerdePrimary}"
                                            FontAttributes="Bold"/>
                                 </HorizontalStackLayout>
 
@@ -96,7 +99,7 @@
                                         Text="Ver Detalle"
                                         Clicked="OnVerDetalleClicked"
                                         CommandParameter="{Binding .}"
-                                        BackgroundColor="#2196F3"
+                                        BackgroundColor="{StaticResource VerdePrimary}"
                                         TextColor="White"
                                         CornerRadius="8"
                                         HeightRequest="44"/>
@@ -113,7 +116,7 @@
                                Text="No hay pencas disponibles"
                                FontSize="16"
                                HorizontalOptions="Center"
-                               TextColor="Gray"/>
+                               TextColor="{StaticResource TextoSecundario}"/>
                     </StackLayout>
                 </CollectionView.EmptyView>
 
@@ -125,7 +128,7 @@
                           x:Name="LoadingIndicator"
                           IsRunning="False"
                           IsVisible="False"
-                          Color="#2196F3"
+                          Color="{StaticResource VerdePrimary}"
                           VerticalOptions="Center"
                           HorizontalOptions="Center"/>
 

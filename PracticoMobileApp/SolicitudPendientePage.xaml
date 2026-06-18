@@ -2,8 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PracticoMobileApp.SolicitudPendientePage"
-             Shell.NavBarIsVisible="False"
-             BackgroundColor="#0F0F0F">
+             Shell.NavBarIsVisible="False">
 
     <Grid>
         <VerticalStackLayout VerticalOptions="Center"
@@ -15,8 +14,8 @@
             <Frame WidthRequest="100"
                    HeightRequest="100"
                    CornerRadius="25"
-                   BackgroundColor="#1A1A2E"
-                   BorderColor="#FFC107"
+                   BackgroundColor="#FFF7E5"
+                   BorderColor="{StaticResource ColorAdvertencia}"
                    HorizontalOptions="Center"
                    Margin="0,0,0,30">
                 <Label Text="⏳"
@@ -28,20 +27,20 @@
             <Label Text="Solicitud enviada"
                    FontSize="26"
                    FontAttributes="Bold"
-                   TextColor="White"
+                   TextColor="{StaticResource TextoPrincipal}"
                    HorizontalOptions="Center"
                    Margin="0,0,0,16"/>
 
             <Label x:Name="MensajeLabel"
                    Text="Tu solicitud fue enviada correctamente."
                    FontSize="15"
-                   TextColor="#CCCCCC"
+                   TextColor="{StaticResource TextoSecundario}"
                    HorizontalOptions="Center"
                    HorizontalTextAlignment="Center"
                    Margin="0,0,0,24"/>
 
-            <Frame BackgroundColor="#1A1A2E"
-                   BorderColor="#333333"
+            <Frame BackgroundColor="{StaticResource BackgroundCard}"
+                   BorderColor="{StaticResource VerdeLight}"
                    CornerRadius="12"
                    Padding="20"
                    HasShadow="False"
@@ -50,21 +49,21 @@
                     <Label Text="¿Qué pasa ahora?"
                            FontSize="13"
                            FontAttributes="Bold"
-                           TextColor="#4285F4"/>
+                           TextColor="{StaticResource VerdePrimary}"/>
                     <Label Text="• Un administrador del sitio revisará tu solicitud"
                            FontSize="13"
-                           TextColor="#AAAAAA"/>
+                           TextColor="{StaticResource TextoPrincipal}"/>
                     <Label Text="• Cuando sea aprobada, podrás iniciar sesión con tu email y contraseña"
                            FontSize="13"
-                           TextColor="#AAAAAA"/>
+                           TextColor="{StaticResource TextoPrincipal}"/>
                     <Label Text="• Te recomendamos volver a intentar ingresar en unas horas"
                            FontSize="13"
-                           TextColor="#AAAAAA"/>
+                           TextColor="{StaticResource TextoPrincipal}"/>
                 </VerticalStackLayout>
             </Frame>
 
             <!-- Boton para volver a intentar el login -->
-            <Frame BackgroundColor="#4285F4"
+            <Frame BackgroundColor="{StaticResource VerdePrimary}"
                    BorderColor="Transparent"
                    CornerRadius="14"
                    Padding="0"
@@ -84,7 +83,7 @@
 
             <!-- Boton volver a sitios -->
             <Frame BackgroundColor="Transparent"
-                   BorderColor="#444444"
+                   BorderColor="{StaticResource BordeMedio}"
                    CornerRadius="14"
                    Padding="0"
                    HeightRequest="52"
@@ -94,7 +93,7 @@
                 </Frame.GestureRecognizers>
                 <Label Text="Volver al inicio"
                        FontSize="15"
-                       TextColor="#AAAAAA"
+                       TextColor="{StaticResource TextoSecundario}"
                        VerticalOptions="Center"
                        HorizontalOptions="Center"/>
             </Frame>

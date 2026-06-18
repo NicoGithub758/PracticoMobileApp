@@ -8,8 +8,9 @@
         <VerticalStackLayout Padding="20" Spacing="20">
 
             <!-- Tarjeta de info de la penca -->
-            <Border Stroke="#DDDDDD"
+            <Border Stroke="{StaticResource VerdeLight}"
                     StrokeThickness="1"
+                    BackgroundColor="{StaticResource BackgroundCard}"
                     Padding="20">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="12"/>
@@ -19,38 +20,39 @@
                     <Label x:Name="NombrePencaLabel"
                            Text="Nombre de la Penca"
                            FontSize="22"
-                           FontAttributes="Bold"/>
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextoPrincipal}"/>
 
                     <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" RowSpacing="8">
                         <Label Grid.Row="0" Grid.Column="0"
                                x:Name="DeporteLabel"
                                Text="Deporte: -"
                                FontSize="14"
-                               TextColor="Gray"/>
+                               TextColor="{StaticResource TextoSecundario}"/>
                         <Label Grid.Row="0" Grid.Column="1"
                                x:Name="EquiposLabel"
                                Text="Equipos: -"
                                FontSize="14"
-                               TextColor="Gray"/>
+                               TextColor="{StaticResource TextoSecundario}"/>
                         <Label Grid.Row="1" Grid.Column="0"
                                x:Name="CostoLabel"
                                Text="Costo: -"
                                FontSize="14"
-                               TextColor="Gray"/>
+                               TextColor="{StaticResource TextoSecundario}"/>
                         <Label Grid.Row="1" Grid.Column="1"
                                x:Name="EstadoLabel"
                                Text="Estado: -"
                                FontSize="14"
-                               TextColor="Gray"/>
+                               TextColor="{StaticResource TextoSecundario}"/>
                     </Grid>
                 </VerticalStackLayout>
             </Border>
 
             <!-- Tarjeta de mi participacion -->
             <Border x:Name="ParticipacionBorder"
-                    Stroke="#4CAF50"
+                    Stroke="{StaticResource ColorExito}"
                     StrokeThickness="2"
-                    BackgroundColor="#E8F5E9"
+                    BackgroundColor="{StaticResource VerdeLight}"
                     Padding="20"
                     IsVisible="False">
                 <Border.StrokeShape>
@@ -61,18 +63,19 @@
                     <Label Text="Tu Participacion"
                            FontSize="16"
                            FontAttributes="Bold"
-                           TextColor="#2E7D32"/>
+                           TextColor="{StaticResource ColorExito}"/>
                     <Label x:Name="MisPuntosLabel"
                            Text="Puntos: 0"
-                           FontSize="14"/>
+                           FontSize="14"
+                           TextColor="{StaticResource TextoPrincipal}"/>
                 </VerticalStackLayout>
             </Border>
 
             <!-- Mensaje si no participa -->
             <Border x:Name="NoParticipaBorder"
-                    Stroke="#FF9800"
+                    Stroke="{StaticResource ColorAdvertencia}"
                     StrokeThickness="2"
-                    BackgroundColor="#FFF3E0"
+                    BackgroundColor="#FFF7E5"
                     Padding="20"
                     IsVisible="False">
                 <Border.StrokeShape>
@@ -80,7 +83,7 @@
                 </Border.StrokeShape>
                 <Label Text="Todavia no participas en esta penca. Para unirte, realiza el pago desde la version web."
                        FontSize="14"
-                       TextColor="#E65100"/>
+                       TextColor="#8A5A12"/>
             </Border>
 
             <!-- Botones de accion -->
@@ -89,20 +92,22 @@
                 <Button x:Name="BtnPosiciones"
                         Text="Ver Tabla de Posiciones"
                         Clicked="OnVerPosicionesClicked"
-                        BackgroundColor="#2196F3"
+                        BackgroundColor="{StaticResource VerdePrimary}"
                         TextColor="White"
                         CornerRadius="10"
                         HeightRequest="55"
-                        FontSize="16"/>
+                        FontSize="16"
+                        FontAttributes="Bold"/>
 
                 <Button x:Name="BtnPredicciones"
                         Text="Hacer Predicciones"
                         Clicked="OnHacerPrediccionesClicked"
-                        BackgroundColor="#9C27B0"
+                        BackgroundColor="{StaticResource VerdePrimaryDark}"
                         TextColor="White"
                         CornerRadius="10"
                         HeightRequest="55"
-                        FontSize="16"/>
+                        FontSize="16"
+                        FontAttributes="Bold"/>
 
             </VerticalStackLayout>
 

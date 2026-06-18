@@ -5,21 +5,22 @@
              Title="Tabla de Posiciones">
 
     <Grid RowDefinitions="Auto,Auto,*,Auto" Padding="10">
-        
+
         <!-- Header con título -->
-        <Label Grid.Row="0" 
-               Text="Clasificación" 
-               FontSize="24" 
+        <Label Grid.Row="0"
+               Text="Clasificación"
+               FontSize="24"
                FontAttributes="Bold"
+               TextColor="{StaticResource TextoPrincipal}"
                HorizontalOptions="Center"
                Margin="0,10,0,20"/>
 
         <!-- Mi posición destacada -->
-        <Border Grid.Row="1" 
+        <Border Grid.Row="1"
                 x:Name="MiPosicionBorder"
                 IsVisible="False"
-                BackgroundColor="#E3F2FD"
-                Stroke="#2196F3"
+                BackgroundColor="{StaticResource VerdeLight}"
+                Stroke="{StaticResource VerdePrimary}"
                 StrokeThickness="2"
                 Padding="15"
                 Margin="0,0,0,10">
@@ -27,58 +28,63 @@
                 <RoundRectangle CornerRadius="10"/>
             </Border.StrokeShape>
             <Grid ColumnDefinitions="Auto,*,Auto">
-                <Label Grid.Column="0" 
+                <Label Grid.Column="0"
                        x:Name="MiPosicionLabel"
-                       Text="1°" 
-                       FontSize="20" 
+                       Text="1°"
+                       FontSize="20"
                        FontAttributes="Bold"
-                       TextColor="#1976D2"
+                       TextColor="{StaticResource VerdePrimaryDark}"
                        VerticalOptions="Center"/>
-                <Label Grid.Column="1" 
-                       Text="Tu posición" 
+                <Label Grid.Column="1"
+                       Text="Tu posición"
                        FontSize="16"
+                       TextColor="{StaticResource TextoPrincipal}"
                        VerticalOptions="Center"
                        Margin="10,0,0,0"/>
-                <Label Grid.Column="2" 
+                <Label Grid.Column="2"
                        x:Name="MisPuntosLabel"
-                       Text="0 pts" 
-                       FontSize="18" 
+                       Text="0 pts"
+                       FontSize="18"
                        FontAttributes="Bold"
-                       TextColor="#1976D2"
+                       TextColor="{StaticResource VerdePrimaryDark}"
                        VerticalOptions="Center"/>
             </Grid>
         </Border>
 
         <!-- Tabla de posiciones -->
-        <Border Grid.Row="2" 
-                Stroke="#CCCCCC"
+        <Border Grid.Row="2"
+                Stroke="{StaticResource VerdeLight}"
                 StrokeThickness="1"
+                BackgroundColor="{StaticResource BackgroundCard}"
                 Padding="0"
                 Margin="0,0,0,10">
             <Border.StrokeShape>
                 <RoundRectangle CornerRadius="10"/>
             </Border.StrokeShape>
-            
+
             <CollectionView x:Name="PosicionesCollectionView"
                             SelectionMode="None">
-                
+
                 <!-- Header de la tabla -->
                 <CollectionView.Header>
-                    <Grid BackgroundColor="#F5F5F5" 
-                          Padding="15,10"
+                    <Grid BackgroundColor="{StaticResource VerdePrimary}"
+                          Padding="15,12"
                           ColumnDefinitions="60,*,80">
-                        <Label Grid.Column="0" 
-                               Text="Pos." 
-                               FontAttributes="Bold"
-                               FontSize="14"/>
-                        <Label Grid.Column="1" 
-                               Text="Jugador" 
-                               FontAttributes="Bold"
-                               FontSize="14"/>
-                        <Label Grid.Column="2" 
-                               Text="Puntos" 
+                        <Label Grid.Column="0"
+                               Text="Pos."
                                FontAttributes="Bold"
                                FontSize="14"
+                               TextColor="White"/>
+                        <Label Grid.Column="1"
+                               Text="Jugador"
+                               FontAttributes="Bold"
+                               FontSize="14"
+                               TextColor="White"/>
+                        <Label Grid.Column="2"
+                               Text="Puntos"
+                               FontAttributes="Bold"
+                               FontSize="14"
+                               TextColor="White"
                                HorizontalOptions="End"/>
                     </Grid>
                 </CollectionView.Header>
@@ -86,25 +92,27 @@
                 <!-- Template para cada fila -->
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Border Padding="0" Margin="0">
-                            <Grid Padding="15,12" 
+                        <Border Padding="0" Margin="0" Stroke="Transparent">
+                            <Grid Padding="15,12"
                                   ColumnDefinitions="60,*,80">
-                                
+
                                 <!-- Color de fondo para el usuario actual -->
                                 <Grid.Triggers>
-                                    <DataTrigger TargetType="Grid" 
-                                                 Binding="{Binding EsUsuarioActual}" 
+                                    <DataTrigger TargetType="Grid"
+                                                 Binding="{Binding EsUsuarioActual}"
                                                  Value="True">
-                                        <Setter Property="BackgroundColor" Value="#E8F5E9"/>
+                                        <Setter Property="BackgroundColor" Value="{StaticResource VerdeLight}"/>
                                     </DataTrigger>
                                 </Grid.Triggers>
 
                                 <!-- Posición con medalla para top 3 -->
                                 <HorizontalStackLayout Grid.Column="0" Spacing="5">
-                                    <Label Text="{Binding Posicion, StringFormat='{0}°'}" 
+                                    <Label Text="{Binding Posicion, StringFormat='{0}°'}"
                                            FontSize="16"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource TextoPrincipal}"
                                            VerticalOptions="Center"/>
-                                    
+
                                     <!-- Medalla de oro -->
                                     <Label IsVisible="{Binding Posicion, Converter={StaticResource IntToBoolConverter}, ConverterParameter='1'}"
                                            Text="🥇"
@@ -120,13 +128,14 @@
                                 </HorizontalStackLayout>
 
                                 <!-- Nombre del jugador -->
-                                <Label Grid.Column="1" 
-                                       Text="{Binding UsuarioNombre}" 
+                                <Label Grid.Column="1"
+                                       Text="{Binding UsuarioNombre}"
                                        FontSize="15"
+                                       TextColor="{StaticResource TextoPrincipal}"
                                        VerticalOptions="Center">
                                     <Label.Triggers>
-                                        <DataTrigger TargetType="Label" 
-                                                     Binding="{Binding EsUsuarioActual}" 
+                                        <DataTrigger TargetType="Label"
+                                                     Binding="{Binding EsUsuarioActual}"
                                                      Value="True">
                                             <Setter Property="FontAttributes" Value="Bold"/>
                                         </DataTrigger>
@@ -134,10 +143,11 @@
                                 </Label>
 
                                 <!-- Puntos -->
-                                <Label Grid.Column="2" 
-                                       Text="{Binding Puntos}" 
+                                <Label Grid.Column="2"
+                                       Text="{Binding Puntos}"
                                        FontSize="16"
                                        FontAttributes="Bold"
+                                       TextColor="{StaticResource VerdePrimary}"
                                        HorizontalOptions="End"
                                        VerticalOptions="Center"/>
                             </Grid>
@@ -148,10 +158,10 @@
                 <!-- Mensaje cuando no hay datos -->
                 <CollectionView.EmptyView>
                     <StackLayout Padding="20" VerticalOptions="Center">
-                        <Label Text="No hay participantes en esta penca todavía" 
+                        <Label Text="No hay participantes en esta penca todavía"
                                FontSize="16"
                                HorizontalOptions="Center"
-                               TextColor="Gray"/>
+                               TextColor="{StaticResource TextoSecundario}"/>
                     </StackLayout>
                 </CollectionView.EmptyView>
 
@@ -163,17 +173,18 @@
                 x:Name="ActualizarButton"
                 Text="Actualizar"
                 Clicked="OnActualizarClicked"
-                BackgroundColor="#2196F3"
+                BackgroundColor="{StaticResource VerdePrimary}"
                 TextColor="White"
                 CornerRadius="10"
-                HeightRequest="50"/>
+                HeightRequest="50"
+                FontAttributes="Bold"/>
 
         <!-- Indicador de carga -->
         <ActivityIndicator Grid.Row="2"
                           x:Name="LoadingIndicator"
                           IsRunning="False"
                           IsVisible="False"
-                          Color="#2196F3"
+                          Color="{StaticResource VerdePrimary}"
                           VerticalOptions="Center"
                           HorizontalOptions="Center"/>
     </Grid>
