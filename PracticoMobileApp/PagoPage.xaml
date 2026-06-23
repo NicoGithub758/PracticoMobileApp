@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PracticoMobileApp.PagoPage"
+             Title="Pago PayPal"
+             Shell.NavBarIsVisible="True">
+
+    <Grid>
+
+        <!-- WebView de PayPal -->
+        <WebView x:Name="PayPalWebView"
+                 Navigating="OnNavigating"
+                 IsVisible="False"
+                 BackgroundColor="White"/>
+
+        <!-- Loading inicial mientras se crea la orden -->
+        <VerticalStackLayout x:Name="LoadingStack"
+                             VerticalOptions="Center"
+                             HorizontalOptions="Center"
+                             Spacing="16">
+            <ActivityIndicator IsRunning="True"
+                               Color="{StaticResource VerdePrimary}"
+                               HeightRequest="50"
+                               WidthRequest="50"/>
+            <Label x:Name="LoadingLabel"
+                   Text="Preparando el pago..."
+                   FontSize="14"
+                   TextColor="{StaticResource TextoSecundario}"
+                   HorizontalOptions="Center"/>
+        </VerticalStackLayout>
+
+        <!-- Overlay de confirmacion (cuando el usuario aprobo y estamos llamando a /confirmar) -->
+        <Grid x:Name="ConfirmandoOverlay"
+              IsVisible="False"
+              BackgroundColor="#E0FFFFFF">
+            <VerticalStackLayout VerticalOptions="Center"
+                                 HorizontalOptions="Center"
+                                 Spacing="20"
+                                 Padding="40">
+                <ActivityIndicator IsRunning="True"
+                                   Color="{StaticResource VerdePrimary}"
+                                   HeightRequest="60"
+                                   WidthRequest="60"/>
+                <Label Text="Confirmando tu pago..."
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource TextoPrincipal}"
+                       HorizontalOptions="Center"/>
+                <Label Text="Esto puede tardar unos segundos. No cierres la app."
+                       FontSize="13"
+                       TextColor="{StaticResource TextoSecundario}"
+                       HorizontalTextAlignment="Center"
+                       HorizontalOptions="Center"/>
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- Pantalla de error -->
+        <VerticalStackLayout x:Name="ErrorStack"
+                             VerticalOptions="Center"
+                             HorizontalOptions="Center"
+                             Padding="40"
+                             Spacing="16"
+                             IsVisible="False">
+            <Label Text="❌"
+                   FontSize="60"
+                   HorizontalOptions="Center"/>
+            <Label x:Name="ErrorTituloLabel"
+                   Text="Algo salió mal"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource TextoPrincipal}"
+                   HorizontalOptions="Center"/>
+            <Label x:Name="ErrorMensajeLabel"
+                   Text=""
+                   FontSize="14"
+                   TextColor="{StaticResource TextoSecundario}"
+                   HorizontalTextAlignment="Center"
+                   HorizontalOptions="Center"/>
+            <Button Text="Volver"
+                    Clicked="OnVolverClicked"
+                    BackgroundColor="{StaticResource VerdePrimary}"
+                    TextColor="White"
+                    CornerRadius="10"
+                    HeightRequest="50"
+                    Margin="0,20,0,0"/>
+        </VerticalStackLayout>
+
+    </Grid>
+
+</ContentPage>

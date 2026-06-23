@@ -73,17 +73,35 @@
 
             <!-- Mensaje si no participa -->
             <Border x:Name="NoParticipaBorder"
-                    Stroke="{StaticResource ColorAdvertencia}"
-                    StrokeThickness="2"
-                    BackgroundColor="#FFF7E5"
-                    Padding="20"
-                    IsVisible="False">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="12"/>
-                </Border.StrokeShape>
-                <Label Text="Todavia no participas en esta penca. Para unirte, realiza el pago desde la version web."
-                       FontSize="14"
+                Stroke="{StaticResource ColorAdvertencia}"
+                StrokeThickness="2"
+                BackgroundColor="#FFF7E5"
+                Padding="20"
+                IsVisible="False">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12"/>
+                        </Border.StrokeShape>
+
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="No participás en esta penca todavía"
+                       FontSize="15"
+                       FontAttributes="Bold"
                        TextColor="#8A5A12"/>
+                            <Label Text="Para hacer predicciones y aparecer en la tabla de posiciones, hacé el pago de participación."
+                       FontSize="13"
+                       TextColor="#8A5A12"/>
+
+                            <!-- Boton de pago -->
+                            <Button x:Name="BtnParticipar"
+                        Text="Participar con PayPal"
+                        Clicked="OnParticiparClicked"
+                        BackgroundColor="{StaticResource VerdePrimary}"
+                        TextColor="White"
+                        CornerRadius="10"
+                        HeightRequest="50"
+                        FontAttributes="Bold"
+                        Margin="0,8,0,0"/>
+                        </VerticalStackLayout>
             </Border>
 
             <!-- Botones de accion -->

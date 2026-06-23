@@ -55,6 +55,9 @@
 	  <MauiXaml Update="LoginInternoPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="PagoPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="PencasPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

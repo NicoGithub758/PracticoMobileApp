@@ -9,8 +9,8 @@ namespace PracticoMobileApp.Services
         private readonly HttpClient _httpClient;
 
         // En emulador Android: 10.0.2.2 apunta a localhost de la PC
-        //private const string BaseUrl = "https://10.0.2.2:7230";
-        private const string BaseUrl = "https://sincere-delight-production-006f.up.railway.app";
+        private const string BaseUrl = "https://10.0.2.2:7230";
+        //private const string BaseUrl = "https://sincere-delight-production-006f.up.railway.app";
 
         public ApiService()
         {
@@ -417,6 +417,75 @@ namespace PracticoMobileApp.Services
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"[Predicciones] Excepcion POST: {ex.Message}");
+                return (false, "No se pudo conectar con el servidor.");
+            }
+        }
+
+        /// <summary>
+        /// Crea una orden de pago en PayPal a traves del backend.
+        /// Devuelve la respuesta con el OrderId, PagoId y la ApprovalUrl que tiene que cargar el WebView.
+        /// </summary>
+        public async Task<(CrearPagoResponseDto? response, string? error)> CrearOrdenPagoAsync(int pencaInstanciaId)
+        {
+            try
+            {
+                if (!await AgregarTokenAsync())
+                    return (null, "No hay sesion activa.");
+
+                var body = new CrearPagoRequestDto
+                {
+                    PencaInstanciaId = pencaInstanciaId
+                };
+
+                var response = await _httpClient.PostAsJsonAsync("/api/pagos/crear-orden", body);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var data = await response.Content.ReadFromJsonAsync<CrearPagoResponseDto>();
+                    if (data == null || string.IsNullOrEmpty(data.ApprovalUrl))
+                        return (null, "El servidor no devolvio una URL valida de PayPal.");
+
+                    return (data, null);
+                }
+
+                var errorMsg = await LeerMensajeError(response);
+                return (null, errorMsg);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[Pagos] Excepcion CrearOrden: {ex.Message}");
+                return (null, "No se pudo conectar con el servidor.");
+            }
+        }
+
+        /// <summary>
+        /// Confirma un pago que el usuario ya aprobo en PayPal.
+        /// Llama a /api/pagos/confirmar para que el backend capture la orden.
+        /// </summary>
+        public async Task<(bool exito, string? error)> ConfirmarPagoAsync(int pagoId, string orderId)
+        {
+            try
+            {
+                if (!await AgregarTokenAsync())
+                    return (false, "No hay sesion activa.");
+
+                var body = new ConfirmarPagoRequestDto
+                {
+                    PagoId = pagoId,
+                    OrderId = orderId
+                };
+
+                var response = await _httpClient.PostAsJsonAsync("/api/pagos/confirmar", body);
+
+                if (response.IsSuccessStatusCode)
+                    return (true, null);
+
+                var errorMsg = await LeerMensajeError(response);
+                return (false, errorMsg);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[Pagos] Excepcion ConfirmarPago: {ex.Message}");
                 return (false, "No se pudo conectar con el servidor.");
             }
         }
