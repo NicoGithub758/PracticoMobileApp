@@ -19,6 +19,8 @@ public partial class MainPage : ContentPage
         WelcomeLabel.Text = $"¡Hola, {nombre}!";
         SitioLabel.Text = sitioNombre;
 
+        AplicarLogoSitio();
+
         // Intentar enviar FCM token si no se envio antes
         var fcmToken = Preferences.Get("fcm_token", string.Empty);
         var jwt = await SecureStorage.GetAsync("jwt_token");
@@ -62,6 +64,7 @@ public partial class MainPage : ContentPage
         Preferences.Remove("usuario_email");
         Preferences.Remove("sitio_id");
         Preferences.Remove("sitio_nombre");
+        Preferences.Remove("sitio_logo");
         // Nota: NO borramos fcm_token de Preferences porque es del dispositivo,
         // no del usuario. Si el usuario vuelve a loguear, lo reutilizamos.
 
@@ -76,5 +79,25 @@ public partial class MainPage : ContentPage
     private async void OnConfiguracionTapped(object sender, EventArgs e)
     {
         await Navigation.PushAsync(new PreferenciasNotificacionesPage());
+    }
+    /// <summary>
+    /// Carga el logo del sitio elegido. Si no hay, deja el logo PencaUY por defecto.
+    /// </summary>
+    private void AplicarLogoSitio()
+    {
+        try
+        {
+            var sitioLogo = Preferences.Get("sitio_logo", string.Empty);
+            if (string.IsNullOrWhiteSpace(sitioLogo)) return;
+
+            if (Uri.TryCreate(sitioLogo, UriKind.Absolute, out var uri))
+            {
+                SitioLogoImage.Source = ImageSource.FromUri(uri);
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[Logo] Error cargando logo del sitio en MainPage: {ex.Message}");
+        }
     }
 }

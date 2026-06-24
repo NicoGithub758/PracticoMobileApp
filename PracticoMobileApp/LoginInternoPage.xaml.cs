@@ -4,12 +4,14 @@ namespace PracticoMobileApp;
 
 [QueryProperty(nameof(SitioId), "sitioId")]
 [QueryProperty(nameof(SitioNombre), "sitioNombre")]
+[QueryProperty(nameof(SitioLogo), "sitioLogo")]
 public partial class LoginInternoPage : ContentPage
 {
     private readonly ApiService _apiService;
 
     public string SitioId { get; set; } = string.Empty;
     public string SitioNombre { get; set; } = string.Empty;
+    public string SitioLogo { get; set; } = string.Empty;
 
     public LoginInternoPage()
     {
@@ -23,6 +25,31 @@ public partial class LoginInternoPage : ContentPage
 
         if (!string.IsNullOrEmpty(SitioNombre))
             SitioLabel.Text = Uri.UnescapeDataString(SitioNombre);
+
+        AplicarLogoSitio();
+    }
+
+    /// <summary>
+    /// Si recibimos un LogoUrl valido, lo usamos. Si no, dejamos el icono PencaUY por defecto.
+    /// </summary>
+    private void AplicarLogoSitio()
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(SitioLogo)) return;
+
+            var logoUrl = Uri.UnescapeDataString(SitioLogo);
+            if (string.IsNullOrWhiteSpace(logoUrl)) return;
+
+            if (Uri.TryCreate(logoUrl, UriKind.Absolute, out var uri))
+            {
+                SitioLogoImage.Source = ImageSource.FromUri(uri);
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[Logo] Error cargando logo del sitio: {ex.Message}");
+        }
     }
 
     private async void OnLoginTapped(object sender, TappedEventArgs e)
@@ -61,6 +88,7 @@ public partial class LoginInternoPage : ContentPage
             Preferences.Set("usuario_email", apiResponse.Email);
             Preferences.Set("sitio_id", apiResponse.SitioId);
             Preferences.Set("sitio_nombre", Uri.UnescapeDataString(SitioNombre));
+            Preferences.Set("sitio_logo", string.IsNullOrEmpty(SitioLogo) ? "" : Uri.UnescapeDataString(SitioLogo));
 
             // Enviar FCM token si esta disponible
             var fcmToken = Preferences.Get("fcm_token", string.Empty);

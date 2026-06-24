@@ -6,10 +6,10 @@
 
     <Grid RowDefinitions="Auto,Auto,*,Auto">
 
-        <!-- Header con logo -->
+        <!-- Header con logo PencaUY (solo en esta pagina, las demas usan el del sitio) -->
         <VerticalStackLayout Grid.Row="0" Padding="30,50,30,20">
             <Image Source="pencauy_logo.svg"
-                   HeightRequest="120"
+                   HeightRequest="100"
                    Aspect="AspectFit"
                    HorizontalOptions="Center"/>
             <Label Text="Elegí tu sitio para continuar"
@@ -40,14 +40,30 @@
                             Stroke="{StaticResource VerdeLight}"
                             StrokeThickness="1"
                             Padding="0">
-                        <Grid ColumnDefinitions="8,*" ColumnSpacing="0">
+                        <Grid ColumnDefinitions="8,Auto,*" ColumnSpacing="0">
                             <!-- Barra de color del sitio -->
                             <BoxView Grid.Column="0"
                                      Color="{Binding ColorPrincipal, TargetNullValue='#6B8E5A'}"
                                      WidthRequest="8"
                                      HorizontalOptions="Fill"/>
 
-                            <VerticalStackLayout Grid.Column="1" Padding="16,14,16,14" Spacing="4">
+                            <!-- Logo del sitio (circular) -->
+                            <Border Grid.Column="1"
+                                    WidthRequest="56"
+                                    HeightRequest="56"
+                                    Margin="14,14,0,14"
+                                    StrokeShape="RoundRectangle 28"
+                                    Stroke="{StaticResource VerdeLight}"
+                                    StrokeThickness="1"
+                                    BackgroundColor="{StaticResource BackgroundSecondary}"
+                                    Padding="0">
+                                <Image Source="{Binding LogoUrl, TargetNullValue='pencauy_icon.svg', FallbackValue='pencauy_icon.svg'}"
+                                       Aspect="AspectFill"
+                                       HorizontalOptions="Fill"
+                                       VerticalOptions="Fill"/>
+                            </Border>
+
+                            <VerticalStackLayout Grid.Column="2" Padding="14,14,16,14" Spacing="4" VerticalOptions="Center">
                                 <Label Text="{Binding Nombre}"
                                        FontSize="17"
                                        FontAttributes="Bold"

@@ -6,6 +6,7 @@ namespace PracticoMobileApp;
 [QueryProperty(nameof(SitioId), "sitioId")]
 [QueryProperty(nameof(SitioNombre), "sitioNombre")]
 [QueryProperty(nameof(TipoRegistro), "tipoRegistro")]
+[QueryProperty(nameof(SitioLogo), "sitioLogo")]
 public partial class AuthOptionsPage : ContentPage
 {
     private readonly Auth0Client _auth0Client;
@@ -14,6 +15,7 @@ public partial class AuthOptionsPage : ContentPage
     public string SitioId { get; set; } = string.Empty;
     public string SitioNombre { get; set; } = string.Empty;
     public string TipoRegistro { get; set; } = string.Empty;
+    public string SitioLogo { get; set; } = string.Empty;
 
     public AuthOptionsPage()
     {
@@ -36,18 +38,42 @@ public partial class AuthOptionsPage : ContentPage
         base.OnAppearing();
 
         if (!string.IsNullOrEmpty(SitioNombre))
-            SitioLabel.Text = $"Ingresando a: {Uri.UnescapeDataString(SitioNombre)}";
+            SitioLabel.Text = Uri.UnescapeDataString(SitioNombre);
+
+        // Cargar el logo del sitio si lo tenemos
+        AplicarLogoSitio();
 
         // Mostrar/ocultar botones segun el tipo de registro del sitio
         ConfigurarBotonesSegunTipoRegistro();
     }
 
     /// <summary>
+    /// Si recibimos un LogoUrl valido, lo usamos. Si no, dejamos el icono de PencaUY por defecto.
+    /// </summary>
+    private void AplicarLogoSitio()
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(SitioLogo)) return;
+
+            var logoUrl = Uri.UnescapeDataString(SitioLogo);
+            if (string.IsNullOrWhiteSpace(logoUrl)) return;
+
+            // Validar que sea una URL valida antes de asignar
+            if (Uri.TryCreate(logoUrl, UriKind.Absolute, out var uri))
+            {
+                SitioLogoImage.Source = ImageSource.FromUri(uri);
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[Logo] Error cargando logo del sitio: {ex.Message}");
+            // Si falla, queda el logo de PencaUY por defecto (no hacemos nada)
+        }
+    }
+
+    /// <summary>
     /// Ajusta que botones mostrar y avisos al usuario segun TipoRegistro del sitio.
-    /// - Abierta: Login + Registro + Google
-    /// - AbiertaConAutorizacion: Login + Registro + Google (con aviso de aprobacion)
-    /// - SoloConInvitacion: Login + Registro (sin Google, con aviso)
-    /// - Cerrada: solo Login (sin opcion de registrarse)
     /// </summary>
     private void ConfigurarBotonesSegunTipoRegistro()
     {
@@ -60,7 +86,6 @@ public partial class AuthOptionsPage : ContentPage
         switch (TipoRegistro)
         {
             case "Abierta":
-                // Por defecto: todo visible, sin aviso
                 break;
 
             case "AbiertaConAutorizacion":
@@ -87,14 +112,19 @@ public partial class AuthOptionsPage : ContentPage
 
     private async void OnLoginInternoTapped(object sender, TappedEventArgs e)
     {
-        // Navegar a la pagina de login interno pasandole el sitioId
-        await Shell.Current.GoToAsync($"LoginInternoPage?sitioId={SitioId}&sitioNombre={Uri.EscapeDataString(SitioNombre)}");
+        await Shell.Current.GoToAsync(
+            $"LoginInternoPage?sitioId={SitioId}" +
+            $"&sitioNombre={Uri.EscapeDataString(SitioNombre)}" +
+            $"&sitioLogo={SitioLogo}");
     }
 
     private async void OnRegistrarseTapped(object sender, TappedEventArgs e)
     {
-        // Navegar a la pagina de registro
-        await Shell.Current.GoToAsync($"RegistroPage?sitioId={SitioId}&sitioNombre={Uri.EscapeDataString(SitioNombre)}&tipoRegistro={TipoRegistro}");
+        await Shell.Current.GoToAsync(
+            $"RegistroPage?sitioId={SitioId}" +
+            $"&sitioNombre={Uri.EscapeDataString(SitioNombre)}" +
+            $"&tipoRegistro={TipoRegistro}" +
+            $"&sitioLogo={SitioLogo}");
     }
 
     private async void OnGoogleLoginTapped(object sender, TappedEventArgs e)
@@ -136,6 +166,7 @@ public partial class AuthOptionsPage : ContentPage
             Preferences.Set("usuario_email", apiResponse.Email);
             Preferences.Set("sitio_id", apiResponse.SitioId);
             Preferences.Set("sitio_nombre", Uri.UnescapeDataString(SitioNombre));
+            Preferences.Set("sitio_logo", string.IsNullOrEmpty(SitioLogo) ? "" : Uri.UnescapeDataString(SitioLogo));
 
             // Enviar FCM token si esta disponible
             var fcmToken = Preferences.Get("fcm_token", string.Empty);

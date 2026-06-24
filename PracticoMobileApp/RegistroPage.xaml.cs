@@ -5,6 +5,7 @@ namespace PracticoMobileApp;
 [QueryProperty(nameof(SitioId), "sitioId")]
 [QueryProperty(nameof(SitioNombre), "sitioNombre")]
 [QueryProperty(nameof(TipoRegistro), "tipoRegistro")]
+[QueryProperty(nameof(SitioLogo), "sitioLogo")]
 public partial class RegistroPage : ContentPage
 {
     private readonly ApiService _apiService;
@@ -12,6 +13,7 @@ public partial class RegistroPage : ContentPage
     public string SitioId { get; set; } = string.Empty;
     public string SitioNombre { get; set; } = string.Empty;
     public string TipoRegistro { get; set; } = string.Empty;
+    public string SitioLogo { get; set; } = string.Empty;
 
     public RegistroPage()
     {
@@ -26,8 +28,31 @@ public partial class RegistroPage : ContentPage
         if (!string.IsNullOrEmpty(SitioNombre))
             SitioLabel.Text = Uri.UnescapeDataString(SitioNombre);
 
-        // Configurar UI segun el tipo de registro del sitio
+        AplicarLogoSitio();
         ConfigurarSegunTipoRegistro();
+    }
+
+    /// <summary>
+    /// Si recibimos un LogoUrl valido, lo usamos. Si no, dejamos el icono PencaUY por defecto.
+    /// </summary>
+    private void AplicarLogoSitio()
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(SitioLogo)) return;
+
+            var logoUrl = Uri.UnescapeDataString(SitioLogo);
+            if (string.IsNullOrWhiteSpace(logoUrl)) return;
+
+            if (Uri.TryCreate(logoUrl, UriKind.Absolute, out var uri))
+            {
+                SitioLogoImage.Source = ImageSource.FromUri(uri);
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[Logo] Error cargando logo del sitio: {ex.Message}");
+        }
     }
 
     private void ConfigurarSegunTipoRegistro()
@@ -35,7 +60,6 @@ public partial class RegistroPage : ContentPage
         switch (TipoRegistro)
         {
             case "Abierta":
-                // Default: sin avisos, sin campo de invitacion
                 AvisoLabel.IsVisible = false;
                 InvitacionStack.IsVisible = false;
                 break;
@@ -53,7 +77,6 @@ public partial class RegistroPage : ContentPage
                 break;
 
             case "Cerrada":
-                // Este caso no debería llegar acá (el boton de registro debería estar oculto)
                 AvisoLabel.Text = "Este sitio no admite nuevos registros.";
                 AvisoLabel.IsVisible = true;
                 RegistrarButton.IsEnabled = false;
@@ -117,8 +140,11 @@ public partial class RegistroPage : ContentPage
             // Si quedo pendiente de aprobacion (sitios con autorizacion o invitacion)
             if (apiResponse.EstadoSolicitud == "Pendiente")
             {
+                // Pasamos tambien el logo del sitio a la pagina de pendiente
                 await Shell.Current.GoToAsync(
-                    $"SolicitudPendientePage?email={Uri.EscapeDataString(apiResponse.Email)}&sitioNombre={SitioNombre}");
+                    $"SolicitudPendientePage?email={Uri.EscapeDataString(apiResponse.Email)}" +
+                    $"&sitioNombre={SitioNombre}" +
+                    $"&sitioLogo={SitioLogo}");
                 return;
             }
 
@@ -129,6 +155,7 @@ public partial class RegistroPage : ContentPage
             Preferences.Set("usuario_email", apiResponse.Email);
             Preferences.Set("sitio_id", apiResponse.SitioId);
             Preferences.Set("sitio_nombre", Uri.UnescapeDataString(SitioNombre));
+            Preferences.Set("sitio_logo", string.IsNullOrEmpty(SitioLogo) ? "" : Uri.UnescapeDataString(SitioLogo));
 
             var fcmToken = Preferences.Get("fcm_token", string.Empty);
             if (!string.IsNullOrEmpty(fcmToken))

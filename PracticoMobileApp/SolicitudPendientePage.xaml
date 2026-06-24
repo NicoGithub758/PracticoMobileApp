@@ -10,19 +10,19 @@
                              Padding="40"
                              Spacing="0">
 
-            <!-- Icono -->
-            <Frame WidthRequest="100"
-                   HeightRequest="100"
-                   CornerRadius="25"
-                   BackgroundColor="#FFF7E5"
-                   BorderColor="{StaticResource ColorAdvertencia}"
+            <!-- Logo del sitio (circular) -->
+            <Image x:Name="SitioLogoImage"
+                   Source="pencauy_logo.svg"
+                   HeightRequest="140"
+                   Aspect="AspectFit"
                    HorizontalOptions="Center"
-                   Margin="0,0,0,30">
-                <Label Text="⏳"
-                       FontSize="50"
-                       HorizontalOptions="Center"
-                       VerticalOptions="Center"/>
-            </Frame>
+                   Margin="0,0,0,20"/>
+
+            <!-- Icono de reloj -->
+            <Label Text="⏳"
+                   FontSize="40"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,12"/>
 
             <Label Text="Solicitud enviada"
                    FontSize="26"

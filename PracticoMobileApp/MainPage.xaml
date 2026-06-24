@@ -7,7 +7,8 @@
         <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="Center">
 
             <!-- Logo -->
-            <Image Source="pencauy_logo.svg"
+            <Image x:Name="SitioLogoImage"
+                   Source="pencauy_logo.svg"
                    HeightRequest="120"
                    Aspect="AspectFit"
                    HorizontalOptions="Center"

@@ -10,8 +10,9 @@
                              Padding="40,40"
                              Spacing="0">
 
-            <!-- Logo -->
-            <Image Source="pencauy_logo.svg"
+            <!-- Logo del sitio (circular) -->
+            <Image x:Name="SitioLogoImage"
+                   Source="pencauy_logo.svg"
                    HeightRequest="130"
                    Aspect="AspectFit"
                    HorizontalOptions="Center"

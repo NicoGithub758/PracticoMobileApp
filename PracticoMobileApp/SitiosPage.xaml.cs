@@ -46,11 +46,16 @@ public partial class SitiosPage : ContentPage
         Preferences.Set("sitio_id_temp", sitio.Id);
         Preferences.Set("sitio_nombre_temp", sitio.Nombre);
 
-        // Navegar a AuthOptionsPage pasandole sitioId, nombre y TipoRegistro
-        // La pagina decide que botones mostrar segun el tipo de registro del sitio
+        // Guardamos el LogoUrl tambien por si alguna pagina lo necesita despues
+        // (ademas de pasarlo por query)
+        Preferences.Set("sitio_logo_temp", sitio.LogoUrl ?? "");
+
+        // Navegar a AuthOptionsPage pasandole sitioId, nombre, TipoRegistro y LogoUrl
+        var logoUrl = string.IsNullOrEmpty(sitio.LogoUrl) ? "" : Uri.EscapeDataString(sitio.LogoUrl);
         var url = $"AuthOptionsPage?sitioId={sitio.Id}" +
                   $"&sitioNombre={Uri.EscapeDataString(sitio.Nombre)}" +
-                  $"&tipoRegistro={sitio.TipoRegistro}";
+                  $"&tipoRegistro={sitio.TipoRegistro}" +
+                  $"&sitioLogo={logoUrl}";
 
         await Shell.Current.GoToAsync(url);
     }
