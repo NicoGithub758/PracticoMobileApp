@@ -1,3 +1,4 @@
+using Android.Gms.Extensions;
 using Auth0.OidcClient;
 using PracticoMobileApp.Services;
 
@@ -169,9 +170,21 @@ public partial class AuthOptionsPage : ContentPage
             Preferences.Set("sitio_logo", string.IsNullOrEmpty(SitioLogo) ? "" : Uri.UnescapeDataString(SitioLogo));
 
             // Enviar FCM token si esta disponible
-            var fcmToken = Preferences.Get("fcm_token", string.Empty);
-            if (!string.IsNullOrEmpty(fcmToken))
-                await _apiService.GuardarFcmTokenAsync(fcmToken);
+            try
+            {
+                var tokenTask = Firebase.Messaging.FirebaseMessaging.Instance.GetToken();
+                var token = await tokenTask.AsAsync<Java.Lang.String>();
+                var fcmToken = token?.ToString();
+                if (!string.IsNullOrEmpty(fcmToken))
+                {
+                    Preferences.Set("fcm_token", fcmToken);
+                    await _apiService.GuardarFcmTokenAsync(fcmToken);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[FCM] Error obteniendo token: {ex.Message}");
+            }
 
             await Shell.Current.GoToAsync("//MainPage");
         }

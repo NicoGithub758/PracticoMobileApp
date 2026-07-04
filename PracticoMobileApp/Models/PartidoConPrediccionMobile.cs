@@ -17,7 +17,7 @@ namespace PracticoMobileApp.Models
 
         // --- Propiedades calculadas para binding en la UI ---
 
-        public string FechaTexto => Fecha.ToLocalTime().ToString("dd/MM/yyyy HH:mm");
+        public string FechaTexto => Fecha.ToString("dd/MM/yyyy HH:mm");
 
         public string EstadoPrediccion => Prediccion != null
             ? $"Tu predicción: {Prediccion.GolesEquipoLocal}-{Prediccion.GolesEquipoVisitante}"
@@ -27,7 +27,7 @@ namespace PracticoMobileApp.Models
             ? Color.FromArgb("#4CAF50")
             : Color.FromArgb("#FF9800");
 
-        public bool PuedePredecir => !Jugado && Fecha > DateTime.UtcNow;
+        public bool PuedePredecir => !Jugado && Fecha > DateTime.Now;
 
         // Inputs editables
         public string GolesLocalInput { get; set; } = "";

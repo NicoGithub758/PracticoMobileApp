@@ -30,6 +30,11 @@ public partial class PrediccionesPage : ContentPage
 
         var todosLosPartidos = await _apiService.ObtenerPartidosYPrediccionesAsync(_participacionId);
 
+        foreach (var p in todosLosPartidos)
+        {
+            System.Diagnostics.Debug.WriteLine($"[DEBUG] {p.Local.Nombre} vs {p.Visitante.Nombre} | Fecha: {p.Fecha} | Jugado: {p.Jugado} | Now: {DateTime.Now} | PuedePredecir: {p.PuedePredecir}");
+        }
+
         // Filtramos solo los que puede predecir (no jugados Y que no empezaron)
         _partidos = todosLosPartidos
             .Where(p => p.PuedePredecir)

@@ -15,6 +15,10 @@
 		<RuntimeIdentifiers>android-arm;android-arm64;android-x86;android-x64</RuntimeIdentifiers>
 		<SupportedOSPlatformVersion>23.0</SupportedOSPlatformVersion>
 	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<AndroidLinkMode>SdkOnly</AndroidLinkMode>
+	</PropertyGroup>
 
 	<ItemGroup>
 	  <None Remove="Platforms\Android\google-services.json" />

@@ -1,4 +1,5 @@
-﻿using PracticoMobileApp.Services;
+﻿using Android.Gms.Extensions;
+using PracticoMobileApp.Services;
 
 namespace PracticoMobileApp;
 
@@ -21,19 +22,28 @@ public partial class MainPage : ContentPage
 
         AplicarLogoSitio();
 
-        // Intentar enviar FCM token si no se envio antes
-        var fcmToken = Preferences.Get("fcm_token", string.Empty);
+        // Intentar enviar FCM token
         var jwt = await SecureStorage.GetAsync("jwt_token");
-        if (!string.IsNullOrEmpty(fcmToken) && !string.IsNullOrEmpty(jwt))
+        if (!string.IsNullOrEmpty(jwt))
         {
-            var apiService = new ApiService();
-            var resultado = await apiService.GuardarFcmTokenAsync(fcmToken);
-            System.Diagnostics.Debug.WriteLine($"[FCM] Token: {fcmToken.Substring(0, 20)}...");
-            System.Diagnostics.Debug.WriteLine($"[FCM] Envio a API: {(resultado ? "OK" : "FALLO")}");
-        }
-        else
-        {
-            System.Diagnostics.Debug.WriteLine($"[FCM] No envio - fcmToken vacio: {string.IsNullOrEmpty(fcmToken)} - jwt vacio: {string.IsNullOrEmpty(jwt)}");
+            try
+            {
+                var tokenTask = Firebase.Messaging.FirebaseMessaging.Instance.GetToken();
+                var token = await tokenTask.AsAsync<Java.Lang.String>();
+                var fcmToken = token?.ToString();
+                if (!string.IsNullOrEmpty(fcmToken))
+                {
+                    Preferences.Set("fcm_token", fcmToken);
+                    var apiService = new ApiService();
+                    var resultado = await apiService.GuardarFcmTokenAsync(fcmToken);
+                    System.Diagnostics.Debug.WriteLine($"[FCM] Token: {fcmToken.Substring(0, 20)}...");
+                    System.Diagnostics.Debug.WriteLine($"[FCM] Envio a API: {(resultado ? "OK" : "FALLO")}");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[FCM] Error obteniendo token: {ex.Message}");
+            }
         }
 
 #if ANDROID
